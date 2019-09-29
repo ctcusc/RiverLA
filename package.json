@@ -1,10 +1,10 @@
 {
   "name": "riverla",
   "version": "1.0.0",
-  "description": "An applicate that automates volunteer matching for RiverLA",
-  "main": "src/index.js",
+  "description": "",
+  "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "build": "tsc"
   },
   "repository": {
     "type": "git",
@@ -15,5 +15,8 @@
   "bugs": {
     "url": "https://github.com/ctcusc/RiverLA/issues"
   },
-  "homepage": "https://github.com/ctcusc/RiverLA#readme"
+  "homepage": "https://github.com/ctcusc/RiverLA#readme",
+  "devDependencies": {
+    "typescript": "^3.6.3"
+  }
 }
