@@ -1,3 +1,3 @@
-let x: number = 10;
-let y: number = 20;
+const x = 10;
+const y = 20;
 console.log(x + y);
