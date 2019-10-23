@@ -10,7 +10,11 @@ module.exports =  {
     sourceType:  'module',  // Allows for the use of imports
   },
   rules:  {
-    // Place to specify ESLint rules. Can be used to overwrite rules specified from the extended configs
-    // e.g. "@typescript-eslint/explicit-function-return-type": "off",
+    'sort-imports': ['error', {
+      'ignoreCase': false,
+      'ignoreDeclarationSort': false,
+      'ignoreMemberSort': false,
+      'memberSyntaxSortOrder': ['none', 'all', 'multiple', 'single']
+    }]
   },
 };
