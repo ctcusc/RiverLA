@@ -12,7 +12,7 @@
     "lint-fix": "eslint --fix src/**/*.ts tests/**/*.ts",
     "postinstall": "npm run build",
     "start": "node ./dist/index.js",
-    "start-dev": "concurrently -k -p \"[{name}]\" -n \"TypeScript,Node\" -c \"cyan.bold,green.bold\" \"npm run watch-ts\" \"npm run watch-node\"",
+    "start-dev": ". ./dev-env && concurrently -k -p \"[{name}]\" -n \"TypeScript,Node\" -c \"cyan.bold,green.bold\" \"npm run watch-ts\" \"npm run watch-node\"",
     "test": "ava tests/**/*.ts",
     "watch-node": "nodemon dist/index.js",
     "watch-ts": "tsc -w"
@@ -41,6 +41,7 @@
     "eslint-plugin-prettier": "^3.1.1",
     "husky": "^3.0.7",
     "lint-staged": "^9.4.0",
+    "nock": "^11.5.0",
     "nodemon": "^1.19.2",
     "prettier": "^1.18.2",
     "ts-node": "^8.4.1",
@@ -50,7 +51,8 @@
     "body-parser": "^1.19.0",
     "express": "^4.17.1",
     "helmet": "^3.21.1",
-    "morgan": "^1.9.1"
+    "morgan": "^1.9.1",
+    "superagent": "^5.1.0"
   },
   "ava": {
     "compileEnhancements": false,
@@ -60,11 +62,6 @@
     "require": [
       "ts-node/register"
     ]
-  },
-  "husky": {
-    "hooks": {
-      "pre-commit": "lint-staged"
-    }
   },
   "lint-staged": {
     "**/*.ts": "eslint"
