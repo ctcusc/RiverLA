@@ -19,7 +19,7 @@ We highly recommend using [Visual Studio Code](https://code.visualstudio.com/) f
 - Yash Chandak
 
 ## Running the app
-In order to run the app in a local environment, run `npm run start-dev`.
+In order to run the app in a local environment, run `npm run dev`.
 
 ## Useful Links
 - [AirTable API Documentation](https://airtable.com/appEHr8iHguvEfXTQ/api/docs#curl/introduction)
