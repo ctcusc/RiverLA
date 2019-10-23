@@ -3,6 +3,11 @@ interface AirTableFilters {
   riverSections?: string[];
 }
 
+interface Organization {
+  name: string;
+  // fill in the rest
+}
+
 class AirTableApiClient {
   private apiKey: string;
 
@@ -12,7 +17,7 @@ class AirTableApiClient {
     console.log(`SendGridAPIClient initialized with api key ${this.apiKey}`);
   }
 
-  getAllOrganizations(filters: AirTableFilters = {}): void {
+  async getAllOrganizations(filters: AirTableFilters = {}): Promise<Organization[]> {
     const { interestCategories, riverSections } = filters;
     console.log(
       `getAllOrganizations called with filters:`,
@@ -21,6 +26,7 @@ class AirTableApiClient {
     );
     // returns a promise that resolves with all organizations that correspond to passed in interestCategories and riverSections.
     // if interestCategories/riverSections is not passed in, we do not need to filter based on those things
+    return [];
   }
 }
 
