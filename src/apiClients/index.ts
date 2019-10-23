@@ -1,4 +1,4 @@
-import AirTableApiClient from './DummyRename';
+import AirTableApiClient from './AirTableApiClient';
 import SendGridApiClient from './SendGridApiClient';
 import env from '../env';
 
