@@ -1,5 +1,5 @@
-import AirTableApiClient from './AirtableApiClient';
-import SendGridApiClient from './SendgridApiClient';
+import AirTableApiClient from './AirTableApiClient';
+import SendGridApiClient from './SendGridApiClient';
 import env from '../env';
 
 export default {
