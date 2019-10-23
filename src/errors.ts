@@ -1,22 +1,24 @@
-// When adding to this file, refer to 
+// When adding to this file, refer to
 // https://developer.here.com/documentation/traffic/topics/http-status-codes.html for status codes
 
-class CustomError extends Error {
-  errorCode: number;
-  message: string;
-  name: string;
+type ErrorName = 'InvalidParametersError' | 'CustomError';
 
-  constructor(message: string, errorCode = 500) {
+export class HttpException extends Error {
+  code: number;
+  message: string;
+  name: ErrorName;
+
+  constructor(message: string, code = 500) {
     super(message);
-    this.errorCode = errorCode;
+    this.code = code;
     this.message = message;
-    this.name = "CustomError";
+    this.name = 'CustomError';
   }
 }
 
-export class InvalidParameterError extends CustomError {
+export class InvalidParametersError extends HttpException {
   constructor(message: string) {
     super(message, 400);
-    this.name = "InvalidParameterError";
+    this.name = 'InvalidParametersError';
   }
 }
