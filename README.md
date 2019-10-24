@@ -12,7 +12,7 @@ We highly recommend using [Visual Studio Code](https://code.visualstudio.com/) f
 - Anthony Weinko
 - Daniel Khoo
 - Madelyn Dubuk
-- Olivia Hong
+- [Olivia Hong](https://github.com/olivia-hong)
 - Peidi Xie
 - Quinn Ngo
 - Stacy Phan
