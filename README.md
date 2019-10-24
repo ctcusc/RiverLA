@@ -13,7 +13,7 @@ We highly recommend using [Visual Studio Code](https://code.visualstudio.com/) f
 - Daniel Khoo
 - Madelyn Dubuk
 - [Olivia Hong](https://github.com/olivia-hong)
-- Peidi Xie
+- [Peidi Xie](https://github.com/cx1802)
 - [Quinn Ngo](https://github.com/quinnngo)
 - Stacy Phan
 - Yash Chandak
