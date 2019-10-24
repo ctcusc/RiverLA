@@ -14,7 +14,7 @@ We highly recommend using [Visual Studio Code](https://code.visualstudio.com/) f
 - Madelyn Dubuk
 - Olivia Hong
 - Peidi Xie
-- Quinn Ngo
+- [Quinn Ngo](https://github.com/quinnngo)
 - Stacy Phan
 - Yash Chandak
 
