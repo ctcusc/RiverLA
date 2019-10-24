@@ -9,7 +9,7 @@ We highly recommend using [Visual Studio Code](https://code.visualstudio.com/) f
 - GitLens
 
 ## Team Members
-- Anthony Wiencko
+- [Anthony Wiencko](https://github.com/wiencko) 
 - Daniel Khoo
 - Madelyn Dubuk
 - Olivia Hong
