@@ -9,12 +9,12 @@ We highly recommend using [Visual Studio Code](https://code.visualstudio.com/) f
 - GitLens
 
 ## Team Members
-- Anthony Weinko
+- [Anthony Wiencko](https://github.com/wiencko) 
 - Daniel Khoo
 - Madelyn Dubuk
-- Olivia Hong
+- [Olivia Hong](https://github.com/olivia-hong)
 - [Peidi Xie](https://github.com/cx1802)
-- Quinn Ngo
+- [Quinn Ngo](https://github.com/quinnngo)
 - Stacy Phan
 - Yash Chandak
 
