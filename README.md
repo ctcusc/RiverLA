@@ -21,6 +21,9 @@ We highly recommend using [Visual Studio Code](https://code.visualstudio.com/) f
 ## Running the app
 In order to run the app in a local environment, run `npm run dev`.
 
+### Running the app on Windows
+To run the app in a local environment on Windows, you need to run on Git Bash. You should run `npm run dev-windows`.
+
 ## Useful Links
 - [AirTable API Documentation](https://airtable.com/appEHr8iHguvEfXTQ/api/docs#curl/introduction)
 - [NationBuilder Admin Panel](http://larivercorp.nationbuilder.com/admin/)
