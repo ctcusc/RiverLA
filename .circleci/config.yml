@@ -39,9 +39,9 @@ jobs:
       - heroku/install
 
       - heroku/deploy-via-git:
-          only-branch: px_branch
+          only-branch: master
 
-          app-name: riverla-test
+          app-name: riverla-staging
 
 workflows:
   version: 2
