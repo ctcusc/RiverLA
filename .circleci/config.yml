@@ -49,6 +49,11 @@ workflows:
     jobs:
       - test
 
+      - hold:
+          type: approval
+          requires:
+            - test 
+
       - deploy:
           requires:
-            - test
+            - hold
