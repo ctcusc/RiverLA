@@ -2,7 +2,11 @@
 #
 # Check https://circleci.com/docs/2.0/language-javascript/ for more details
 #
-version: 2
+version: 2.1
+
+orbs:
+  heroku: circleci/heroku@1.0.0
+
 jobs:
   build:
     docker:
@@ -35,3 +39,10 @@ jobs:
 
       # run tests!
       - run: npm test
+
+workflows:
+  heroku_deploy:
+    jobs:
+      - build
+      - heroku/deploy-via-git:
+          only-branch: master
