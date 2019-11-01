@@ -8,15 +8,9 @@ orbs:
   heroku: circleci/heroku@0.0.8
 
 jobs:
-  build:
+  test:
     docker:
-      # specify the version you desire here
       - image: circleci/node:10.16
-
-      # Specify service dependencies here if necessary
-      # CircleCI maintains a library of pre-built images
-      # documented at https://circleci.com/docs/2.0/circleci-images/
-      # - image: circleci/mongo:3.4.4
 
     working_directory: ~/repo
 
@@ -43,5 +37,6 @@ jobs:
 workflows:
   heroku_deploy:
     jobs:
-      - build
-      - heroku/deploy-via-git
+      - test
+      - heroku/deploy-via-git:
+          requires: -test
