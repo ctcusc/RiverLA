@@ -2,28 +2,23 @@
 #
 # Check https://circleci.com/docs/2.0/language-javascript/ for more details
 #
-version: 2
+version: 2.1
+orbs:
+  heroku: circleci/heroku@0.0.8
 jobs:
-  build:
+  test:
     docker:
-      # specify the version you desire here
       - image: circleci/node:10.16
-
-      # Specify service dependencies here if necessary
-      # CircleCI maintains a library of pre-built images
-      # documented at https://circleci.com/docs/2.0/circleci-images/
-      # - image: circleci/mongo:3.4.4
 
     working_directory: ~/repo
 
     steps:
       - checkout
 
-      # Download and cache dependencies
       - restore_cache:
           keys:
             - v1-dependencies-{{ checksum "package.json" }}
-            # fallback to using the latest cache if no exact match is found
+            
             - v1-dependencies-
 
       - run: npm install
@@ -33,5 +28,27 @@ jobs:
             - node_modules
           key: v1-dependencies-{{ checksum "package.json" }}
 
-      # run tests!
       - run: npm test
+  
+  deploy:
+    executor: heroku/default
+
+    steps:
+      - checkout
+
+      - heroku/install
+
+      - heroku/deploy-via-git:
+          only-branch: px_branch
+
+          app-name: riverla-test
+
+workflows:
+  version: 2
+  test_and_deploy:
+    jobs:
+      - test
+
+      - deploy:
+          requires:
+            - test
