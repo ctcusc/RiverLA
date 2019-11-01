@@ -44,5 +44,4 @@ workflows:
   heroku_deploy:
     jobs:
       - build
-      - heroku/deploy-via-git:
-          only-branch: master
+      - heroku/deploy-via-git
