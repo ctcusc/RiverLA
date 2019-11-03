@@ -13,6 +13,7 @@
     "postinstall": "npm run build",
     "start": "node ./dist/index.js",
     "dev": ". ./dev.env && concurrently -k -p \"[{name}]\" -n \"TypeScript,Node\" -c \"cyan.bold,green.bold\" \"npm run watch-ts\" \"npm run watch-node\"",
+    "dev-windows": "bash ./dev-windows.sh && concurrently -k -p \"[{name}]\" -n \"TypeScript,Node\" -c \"cyan.bold,green.bold\" \"npm run watch-ts\" \"npm run watch-node\"",
     "test": "tsc && ava",
     "test-coverage": "tsc && nyc ava",
     "watch-node": "nodemon dist/index.js",
@@ -48,6 +49,8 @@
     "nodemon": "^1.19.2",
     "nyc": "^14.1.1",
     "prettier": "^1.18.2",
+    "pretty-quick": "^2.0.0",
+    "sinon": "^7.5.0",
     "ts-node": "^8.4.1",
     "typescript": "^3.6.3"
   },
@@ -69,7 +72,7 @@
   },
   "husky": {
     "hooks": {
-      "pre-commit": "lint-staged"
+      "pre-commit": "pretty-quick --staged && lint-staged"
     }
   },
   "lint-staged": {
@@ -79,6 +82,8 @@
     "extends": "@istanbuljs/nyc-config-typescript",
     "all": true,
     "check-coverage": true,
-    "include": ["src/**/*.ts"]
+    "include": [
+      "src/**/*.ts"
+    ]
   }
 }
