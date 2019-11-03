@@ -1,9 +1,10 @@
+import apiClients from './apiClients';
 import app from './app';
 import env from './env';
-import apiClients from './apiClients';
 
-app.listen(env.server.port, () => {
+app.listen(env.server.port, async () => {
   console.log(apiClients.airtableApiClient);
   console.log(apiClients.sendgridApiClient);
   console.log(`🚀 App listening on port ${env.server.port}`);
+  await apiClients.sendgridApiClient.sendEmail('anthony.wiencko@gmail.com', 'wiencko@usc.edu', 'mybody', 'mysubject');
 });
