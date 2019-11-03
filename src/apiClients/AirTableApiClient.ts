@@ -11,7 +11,7 @@ export interface Organization {
   description: string;
   activity: string;
   interestCategories: string[];
-  riverSections: string;
+  riverSection: string;
   phoneNumber: string;
   url: string;
   email: string;
@@ -19,7 +19,7 @@ export interface Organization {
 
 class AirTableApiClient {
   private apiKey: string;
-  private base: any;
+  public base: any;
 
   constructor(apiKey: string) {
     this.apiKey = apiKey;
@@ -65,7 +65,7 @@ class AirTableApiClient {
                 description: record.get('Description'),
                 activity: record.get('Activity'),
                 interestCategories: record.get('Interest Categories'),
-                riverSections: record.get('River Section'),
+                riverSection: record.get('River Section'),
                 phoneNumber: record.get('Phone Number'),
                 url: record.get('URL'),
                 email: record.get('Email'),
