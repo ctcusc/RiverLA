@@ -43,8 +43,21 @@ class AirTableApiClient {
           view: 'Grid view',
         })
         .eachPage((records: any[], fetchNextPage: any) => {
+          let filteredRecords: any[] = records;
+          if (typeof riverSections !== 'undefined') {
+            filteredRecords = records.filter(record => {
+              return riverSections.includes(record.get('River Section'));
+            });
+          }
+          if (typeof interestCategories !== 'undefined') {
+            filteredRecords = filteredRecords.filter(record => {
+              interestCategories.filter(category => {
+                record.get('Interst Categories').includes(category);
+              }).length != 0;
+            });
+          }
           organizations.concat(
-            records.filter().map((record: any) => {
+            filteredRecords.map((record: any) => {
               if (typeof record === 'undefined') {
               }
               const org: Organization = {
