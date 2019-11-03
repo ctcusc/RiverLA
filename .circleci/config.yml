@@ -9,58 +9,42 @@ jobs:
   test:
     docker:
       - image: circleci/node:10.16
-
     working_directory: ~/repo
-
     steps:
       - checkout
-
       - restore_cache:
           keys:
             - v1-dependencies-{{ checksum "package.json" }}
-            
             - v1-dependencies-
-
       - run: npm install
-
       - save_cache:
           paths:
             - node_modules
           key: v1-dependencies-{{ checksum "package.json" }}
-
       - run: npm test
-  
   deploy:
     executor: heroku/default
-
     steps:
       - checkout
-
       - heroku/install
-
       - heroku/deploy-via-git:
           app-name: riverla-staging
 
 workflows:
   version: 2
   test_and_deploy:
-
     jobs:
       - test
-
       - hold:
           type: approval
           requires:
             - test
-
           filters:
             branches:
               only: master
-
       - deploy:
           requires:
             - hold
-          
           filters:
             branches:
               only: master
