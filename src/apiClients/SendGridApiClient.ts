@@ -14,6 +14,7 @@ class SendGridApiClient {
     recipientEmailAddress: string,
     emailBody: string,
     emailSubject: string,
+    /* eslint-disable-next-line @typescript-eslint/no-explicit-any */
   ): Promise<any> {
     console.log(`sendEmail called with arguments:`, senderEmailAddress, recipientEmailAddress, emailBody, emailSubject);
 
