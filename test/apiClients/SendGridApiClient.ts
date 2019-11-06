@@ -40,24 +40,27 @@ test.serial('throws an exception when an empty api key is passed into its constr
 test.serial('resolves to true when sgMail.send is successful', async t => {
   try {
     const sendgridApiClient = new SendGridApiClient('non-empty key');
-    sendgridStub.resolves(true);
+    const sendgridResult: [Response, {}] = [{} as Response, {}];
+    sendgridStub.resolves(sendgridResult);
 
-    t.is(await sendgridApiClient.sendEmail(fromEmail, toEmail, subject, body), true);
-
+    const result = await sendgridApiClient.sendEmail(fromEmail, toEmail, body, subject);
+    t.is(result, sendgridResult[0]);
     t.true(
-      /* eslint-disable @typescript-eslint/camelcase*/
-      sendgridStub.calledWith({
-        to: toEmail,
-        from: fromEmail,
-        subject: subject,
-        text: body,
-        mail_settings: {
-          sandbox_mode: {
-            enable: process.env.NODE_ENV === 'dev',
+      sendgridStub.calledWith(
+        sinon.match.array.deepEquals([
+          {
+            to: toEmail,
+            from: fromEmail,
+            subject: subject,
+            text: body,
+            mailSettings: {
+              sandboxMode: {
+                enable: false,
+              },
+            },
           },
-        },
-        /* eslint-disable @typescript-eslint/camelcase*/
-      }),
+        ]),
+      ),
     );
   } catch (e) {
     t.fail();

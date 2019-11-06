@@ -1,11 +1,12 @@
 import { InvalidParametersError } from '../errors';
+import { MailData } from '@sendgrid/helpers/classes/mail';
 import sgMail from '@sendgrid/mail';
 
 class SendGridApiClient {
   private apiKey: string;
 
   constructor(apiKey: string) {
-    if (apiKey == '') {
+    if (apiKey === '') {
       throw new InvalidParametersError('API Key is empty.');
     }
     this.apiKey = apiKey;
@@ -13,31 +14,23 @@ class SendGridApiClient {
     console.log(`SendGridAPIClient initialized with api key ${this.apiKey}`);
   }
 
-  async sendEmail(
-    senderEmailAddress: string,
-    recipientEmailAddress: string,
-    emailBody: string,
-    emailSubject: string,
-    /* eslint-disable-next-line @typescript-eslint/no-explicit-any */
-  ): Promise<any> {
+  async sendEmail(senderEmailAddress: string, recipientEmailAddress: string, emailBody: string, emailSubject: string) {
     console.log(`sendEmail called with arguments:`, senderEmailAddress, recipientEmailAddress, emailBody, emailSubject);
 
     sgMail.setApiKey(this.apiKey);
-    /* eslint-disable @typescript-eslint/camelcase*/
-    const msg = {
+    const mailData: MailData = {
       to: recipientEmailAddress,
       from: senderEmailAddress,
       subject: emailSubject,
       text: emailBody,
-      mail_settings: {
-        sandbox_mode: {
-          enable: process.env.NODE_ENV === 'dev',
+      mailSettings: {
+        sandboxMode: {
+          enable: process.env.NODE_ENV === 'development',
         },
       },
     };
-    /* eslint-enable @typescript-eslint/camelcase*/
-
-    return sgMail.send(msg);
+    const [sgResponse] = await sgMail.send([mailData]);
+    return sgResponse;
   }
 }
 
