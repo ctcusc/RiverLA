@@ -6,6 +6,7 @@ router.use('/', (_, res, next) => {
 });
 
 router.post('/nationbuilder/personCreated', function(req, res) {
+  // console.log(req.body.payload); // This contains the information from nationbuilder
   res.send('Got a POST request');
 });
 

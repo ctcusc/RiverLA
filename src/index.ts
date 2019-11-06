@@ -16,6 +16,6 @@ app.listen(env.server.port, () => {
   console.log(
     `[Instructions to test webhook]
     Go to https://larivercorp.nationbuilder.com/admin/webhooks/new and
-    add a new webhook with Endpoint URL: ${ngrokUrl}.`,
+    add a new webhook with Endpoint URL: ${ngrokUrl}/webhooks/nationbuilder/personCreated.`,
   );
 })();
