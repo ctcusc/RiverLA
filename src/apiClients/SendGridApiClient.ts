@@ -1,9 +1,13 @@
+import { InvalidParametersError } from '../errors';
 import sgMail from '@sendgrid/mail';
 
 class SendGridApiClient {
   private apiKey: string;
 
   constructor(apiKey: string) {
+    if (apiKey == '') {
+      throw new InvalidParametersError('API Key is empty.');
+    }
     this.apiKey = apiKey;
     // remove this log when this API key is finally used somewhere
     console.log(`SendGridAPIClient initialized with api key ${this.apiKey}`);
@@ -32,27 +36,8 @@ class SendGridApiClient {
       },
     };
     /* eslint-enable @typescript-eslint/camelcase*/
-    console.log(msg);
-    //const res = await sgMail.send(msg);
 
-    let res;
-    try {
-      res = await sgMail.send(msg);
-    } catch (e) {
-      res = e;
-    }
-
-    console.log(res);
-
-    let code = -1;
-    if (res.code != undefined) {
-      code = res.code;
-    } else if (res[0] != undefined) {
-      code = res[0].statusCode;
-    }
-
-    console.log(code);
-    return res;
+    return sgMail.send(msg);
   }
 }
 
