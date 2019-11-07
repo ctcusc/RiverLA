@@ -1,6 +1,6 @@
 import Airtable from 'airtable';
 
-interface AirTableFilters {
+export interface AirTableFilters {
   interestCategories?: string[];
   riverSections?: string[];
 }
@@ -35,54 +35,57 @@ class AirTableApiClient {
       `interestCategories: ${interestCategories}`,
       `riverSections: ${riverSections}`,
     );
-    const organizations: Organization[] = [];
+    let organizations: Organization[] = [];
 
     const promise: Promise<Organization[]> = new Promise((resolve, reject) => {
       this.base('Organizations')
         .select({
           view: 'Grid view',
         })
-        .eachPage((records: any[], fetchNextPage: any) => {
-          let filteredRecords: any[] = records;
-          if (typeof riverSections !== 'undefined') {
-            filteredRecords = records.filter(record => {
-              return riverSections.includes(record.get('River Section'));
-            });
-          }
-          if (typeof interestCategories !== 'undefined') {
-            filteredRecords = filteredRecords.filter(record => {
-              interestCategories.filter(category => {
-                record.get('Interst Categories').includes(category);
-              }).length != 0;
-            });
-          }
-          organizations.concat(
-            filteredRecords.map((record: any) => {
-              if (typeof record === 'undefined') {
-              }
-              const org: Organization = {
-                name: record.get('Name'),
-                description: record.get('Description'),
-                activity: record.get('Activity'),
-                interestCategories: record.get('Interest Categories'),
-                riverSection: record.get('River Section'),
-                phoneNumber: record.get('Phone Number'),
-                url: record.get('URL'),
-                email: record.get('Email'),
-              };
-              console.log(org.name);
-              return org;
-            }),
-          );
-          fetchNextPage();
-        }),
-        function done(err: any) {
-          if (err) {
-            reject(err);
-          } else {
-            resolve(organizations);
-          }
-        };
+        .eachPage(
+          (records: any[], fetchNextPage: any) => {
+            let filteredRecords: any[] = records;
+            if (typeof riverSections !== 'undefined') {
+              filteredRecords = records.filter(record => {
+                return riverSections.includes(record.get('River Section'));
+              });
+            }
+            if (typeof interestCategories !== 'undefined') {
+              filteredRecords = filteredRecords.filter(record => {
+                return (
+                  interestCategories.filter(category => {
+                    return record.get('Interest Categories').includes(category);
+                  }).length != 0
+                );
+              });
+            }
+            organizations = organizations.concat(
+              filteredRecords.map((record: any) => {
+                if (typeof record === 'undefined') {
+                }
+                const org: Organization = {
+                  name: record.get('Name'),
+                  description: record.get('Description'),
+                  activity: record.get('Activity'),
+                  interestCategories: record.get('Interest Categories'),
+                  riverSection: record.get('River Section'),
+                  phoneNumber: record.get('Phone Number'),
+                  url: record.get('URL'),
+                  email: record.get('Email'),
+                };
+                return org;
+              }),
+            );
+            fetchNextPage();
+          },
+          function done(err: any) {
+            if (err) {
+              reject(err);
+            } else {
+              resolve(organizations);
+            }
+          },
+        );
     });
     // returns a promise that resolves with all organizations that correspond to passed in interestCategories and riverSections.
     // if interestCategories/riverSections is not passed in, we do not need to filter based on those things
