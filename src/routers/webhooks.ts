@@ -12,13 +12,15 @@ router.use('/', (_, res, next) => {
 });
 
 router.post('/nationbuilder/personCreated', function(req, res) {
+  // eslint-disable-next-line @typescript-eslint/camelcase
+  const { email, first_name, phone } = req.body.payload.person;
   const nationBuilderPerson: NationBuilderPerson = {
-    email: req.body.payload.person.email,
-    firstName: req.body.payload.person.first_name,
-    phone: req.body.payload.person.phone,
+    email: email,
+    // eslint-disable-next-line @typescript-eslint/camelcase
+    firstName: first_name,
+    phone: phone,
   };
-  console.log('NationBuilderPerson', nationBuilderPerson, 'Created');
-  res.send();
+  res.json(nationBuilderPerson);
 });
 
 export default router;
