@@ -1,7 +1,6 @@
 import { MailData } from '@sendgrid/helpers/classes/mail';
 import { Response } from 'request';
 import { ResponseError } from '@sendgrid/helpers/classes';
-
 import SendGridApiClient from '../../src/apiClients/SendGridApiClient';
 import sgMail from '@sendgrid/mail';
 import sinon from 'sinon';

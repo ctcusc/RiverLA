@@ -1,6 +1,9 @@
 import { InvalidParametersError } from './errors';
 
+type TNodeEnv = 'development' | 'staging' | 'production' | 'test';
+
 interface Environment {
+  nodeEnv: TNodeEnv;
   apiKeys: {
     airtable: string;
     sendgrid: string;
@@ -38,7 +41,16 @@ function getString(val: string | undefined, variableName: string, defaultValue?:
   return val;
 }
 
+function getEnvironment(val: string | undefined): TNodeEnv {
+  if (val === 'test' || val === 'production' || val === 'staging' || val === 'development') {
+    return val;
+  }
+
+  throw new InvalidParametersError(`Invalid value for NODE_ENV: ${val}`);
+}
+
 const environment: Environment = {
+  nodeEnv: getEnvironment(process.env.NODE_ENV),
   apiKeys: {
     airtable: getString(process.env.AIRTABLE_API_KEY, 'AIRTABLE_API_KEY'),
     sendgrid: getString(process.env.SENDGRID_API_KEY, 'SENDGRID_API_KEY'),
