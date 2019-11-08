@@ -1,3 +1,0 @@
-setenv SENDGRID_API_KEY replace_me
-setenv AIRTABLE_API_KEY replace_me
-setenv NODE_ENV development
