@@ -10,7 +10,6 @@ class SendGridApiClient {
       throw new InvalidParametersError('API Key is empty.');
     }
     this.apiKey = apiKey;
-    // remove this log when this API key is finally used somewhere
   }
 
   async sendEmail(senderEmailAddress: string, recipientEmailAddress: string, emailBody: string, emailSubject: string) {
