@@ -18,17 +18,13 @@ export interface Organization {
 }
 
 class AirTableApiClient {
-  private apiKey: string;
-  public base: any;
+  private base: any;
 
   constructor(apiKey: string) {
-    this.apiKey = apiKey;
     this.base = new Airtable({ apiKey: apiKey }).base('appEHr8iHguvEfXTQ');
-    // remove this log when this API key is finally used somewhere
-    console.log(`AirTableAPIClient initialized with api key ${this.apiKey}`);
   }
 
-  async getAllOrganizations(filters: AirTableFilters = {}): Promise<Organization[]> {
+  getAllOrganizations(filters: AirTableFilters = {}): Promise<Organization[]> {
     const { interestCategories, riverSections } = filters;
     console.log(
       `getAllOrganizations called with filters:`,
@@ -78,7 +74,7 @@ class AirTableApiClient {
             );
             fetchNextPage();
           },
-          function done(err: any) {
+          function done(err: Error) {
             if (err) {
               reject(err);
             } else {

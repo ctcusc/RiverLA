@@ -2,6 +2,8 @@ import AirTableApiClient, { AirTableFilters, Organization } from '../../src/apiC
 import nock from 'nock';
 import test from 'ava';
 
+const AIRTABLE_API_URL = 'https://api.airtable.com/v0/appEHr8iHguvEfXTQ';
+
 const records: any = [
   {
     id: 'abc123',
@@ -87,10 +89,9 @@ const org3: Organization = {
 test('Returns one page of results properly', async t => {
   const airtableApiClient: AirTableApiClient = new AirTableApiClient('keyzxy');
 
-  nock('https://api.airtable.com/v0/appEHr8iHguvEfXTQ')
-    .persist()
-    .log(data => console.log(data))
-    .get('/Organizations?view=Grid+view')
+  nock(AIRTABLE_API_URL)
+    .get('/Organizations')
+    .query({ view: 'Grid view' })
     .reply(200, {
       records,
     });
@@ -103,10 +104,9 @@ test('Returns one page of results properly', async t => {
 test('Returns one page of filtered river results properly', async t => {
   const airtableApiClient: AirTableApiClient = new AirTableApiClient('keyzxy');
 
-  nock('https://api.airtable.com/v0/appEHr8iHguvEfXTQ')
-    .persist()
-    .log(data => console.log(data))
-    .get('/Organizations?view=Grid+view')
+  nock(AIRTABLE_API_URL)
+    .get('/Organizations')
+    .query({ view: 'Grid view' })
     .reply(200, {
       records,
     });
@@ -123,10 +123,9 @@ test('Returns one page of filtered river results properly', async t => {
 test('Returns one page of filtered interest categories results properly', async t => {
   const airtableApiClient: AirTableApiClient = new AirTableApiClient('keyzxy');
 
-  nock('https://api.airtable.com/v0/appEHr8iHguvEfXTQ')
-    .persist()
-    .log(data => console.log(data))
-    .get('/Organizations?view=Grid+view')
+  nock(AIRTABLE_API_URL)
+    .get('/Organizations')
+    .query({ view: 'Grid view' })
     .reply(200, {
       records,
     });
@@ -143,10 +142,9 @@ test('Returns one page of filtered interest categories results properly', async 
 test.serial('Returns one page of filtered both empty results properly', async t => {
   const airtableApiClient: AirTableApiClient = new AirTableApiClient('keyzxy');
 
-  nock('https://api.airtable.com/v0/appEHr8iHguvEfXTQ')
-    .persist()
-    .log(data => console.log(data))
-    .get('/Organizations?view=Grid+view')
+  nock(AIRTABLE_API_URL)
+    .get('/Organizations')
+    .query({ view: 'Grid view' })
     .reply(200, {
       records,
     });
@@ -164,10 +162,9 @@ test.serial('Returns one page of filtered both empty results properly', async t 
 test('Returns one page of filtered both results properly', async t => {
   const airtableApiClient: AirTableApiClient = new AirTableApiClient('keyzxy');
 
-  nock('https://api.airtable.com/v0/appEHr8iHguvEfXTQ')
-    .persist()
-    .log(data => console.log(data))
-    .get('/Organizations?view=Grid+view')
+  nock(AIRTABLE_API_URL)
+    .get('/Organizations')
+    .query({ view: 'Grid view' })
     .reply(200, {
       records,
     });
@@ -185,10 +182,9 @@ test('Returns one page of filtered both results properly', async t => {
 test('Returns one page of filtered two interest categories results properly', async t => {
   const airtableApiClient: AirTableApiClient = new AirTableApiClient('keyzxy');
 
-  nock('https://api.airtable.com/v0/appEHr8iHguvEfXTQ')
-    .persist()
-    .log(data => console.log(data))
-    .get('/Organizations?view=Grid+view')
+  nock(AIRTABLE_API_URL)
+    .get('/Organizations')
+    .query({ view: 'Grid view' })
     .reply(200, {
       records,
     });
@@ -205,10 +201,9 @@ test('Returns one page of filtered two interest categories results properly', as
 test('Returns one page of filtered two river results properly', async t => {
   const airtableApiClient: AirTableApiClient = new AirTableApiClient('keyzxy');
 
-  nock('https://api.airtable.com/v0/appEHr8iHguvEfXTQ')
-    .persist()
-    .log(data => console.log(data))
-    .get('/Organizations?view=Grid+view')
+  nock(AIRTABLE_API_URL)
+    .get('/Organizations')
+    .query({ view: 'Grid view' })
     .reply(200, {
       records,
     });
