@@ -30,41 +30,33 @@ test.serial('throws an exception when an empty api key is passed into its constr
 });
 
 test.serial('resolves to true when sgMail.send is successful', async t => {
-  try {
-    const sendgridApiClient = new SendGridApiClient('non-empty key');
-    const sendgridResult: [Response, {}] = [{} as Response, {}];
-    sendgridStub.resolves(sendgridResult);
+  const sendgridApiClient = new SendGridApiClient('non-empty key');
+  const sendgridResult: [Response, {}] = [{} as Response, {}];
+  sendgridStub.resolves(sendgridResult);
 
-    const result = await sendgridApiClient.sendEmail(fromEmail, toEmail, body, subject);
-    t.is(result, sendgridResult[0]);
-    t.true(
-      sendgridStub.calledWith(
-        sinon.match.array.deepEquals([
-          {
-            to: toEmail,
-            from: fromEmail,
-            subject: subject,
-            text: body,
-            mailSettings: {
-              sandboxMode: {
-                enable: false,
-              },
+  const result = await sendgridApiClient.sendEmail(fromEmail, toEmail, body, subject);
+  t.is(result, sendgridResult[0]);
+  t.true(
+    sendgridStub.calledWith(
+      sinon.match.array.deepEquals([
+        {
+          to: toEmail,
+          from: fromEmail,
+          subject: subject,
+          text: body,
+          mailSettings: {
+            sandboxMode: {
+              enable: false,
             },
           },
-        ]),
-      ),
-    );
-  } catch (e) {
-    t.fail();
-  }
+        },
+      ]),
+    ),
+  );
 });
 
 test.serial('rejects when sgMail.send rejects', async t => {
   sendgridStub.rejects();
-  try {
-    const sendgridApiClient = new SendGridApiClient('non-empty key');
-    await t.throwsAsync(sendgridApiClient.sendEmail(toEmail, fromEmail, subject, body));
-  } catch (e) {
-    t.fail();
-  }
+  const sendgridApiClient = new SendGridApiClient('non-empty key');
+  await t.throwsAsync(sendgridApiClient.sendEmail(toEmail, fromEmail, subject, body));
 });
