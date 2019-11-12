@@ -71,6 +71,7 @@
       "ts"
     ],
     "require": [
+      "dotenv/config",
       "ts-node/register"
     ]
   },
