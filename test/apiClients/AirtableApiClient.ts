@@ -140,7 +140,7 @@ test('Returns one page of filtered interest categories results properly', async 
   t.deepEqual(organizations, answer);
 });
 
-test('Returns one page of filtered both empty results properly', async t => {
+test.serial('Returns one page of filtered both empty results properly', async t => {
   const airtableApiClient: AirTableApiClient = new AirTableApiClient('keyzxy');
 
   nock('https://api.airtable.com/v0/appEHr8iHguvEfXTQ')
