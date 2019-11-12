@@ -27,13 +27,6 @@ test.serial('throws an exception when an empty api key is passed into its constr
   t.throws(() => {
     new SendGridApiClient('');
   });
-  try {
-    const sendgridApiClient = new SendGridApiClient('');
-    //Unneccessary but I get an error if I don't have it
-    sendgridApiClient.sendEmail(fromEmail, toEmail, subject, body);
-  } catch (e) {
-    t.pass();
-  }
 });
 
 test.serial('resolves to true when sgMail.send is successful', async t => {
