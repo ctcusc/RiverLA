@@ -1,5 +1,6 @@
 import { InvalidParametersError } from '../errors';
 import { MailData } from '@sendgrid/helpers/classes/mail';
+import env from '../env';
 import sgMail from '@sendgrid/mail';
 
 class SendGridApiClient {
@@ -21,7 +22,7 @@ class SendGridApiClient {
       text: emailBody,
       mailSettings: {
         sandboxMode: {
-          enable: process.env.NODE_ENV === 'development',
+          enable: env.nodeEnv === 'development',
         },
       },
     };
