@@ -63,8 +63,8 @@ test.serial('rejects when sgMail.send rejects', async t => {
   sendgridStub.rejects();
   try {
     const sendgridApiClient = new SendGridApiClient('non-empty key');
-    await sendgridApiClient.sendEmail(toEmail, fromEmail, subject, body);
+    await t.throwsAsync(sendgridApiClient.sendEmail(toEmail, fromEmail, subject, body));
   } catch (e) {
-    t.pass();
+    t.fail();
   }
 });
