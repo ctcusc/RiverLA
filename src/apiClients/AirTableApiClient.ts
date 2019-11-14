@@ -60,8 +60,6 @@ class AirTableApiClient {
       };
     }
 
-    const empty = (element: any) => element != 'undefined';
-
     const promise: Promise<Organization[]> = new Promise((resolve, reject) => {
       this.base('Organizations')
         .select({
@@ -81,11 +79,7 @@ class AirTableApiClient {
             }
             if (typeof interestCategories !== 'undefined') {
               organizations = organizations.filter(organization => {
-                return interestCategories
-                  .filter(category => {
-                    return organization.interestCategories.includes(category);
-                  })
-                  .some(empty);
+                return interestCategories.some(category => organization.interestCategories.includes(category));
               });
             }
             fetchNextPage();
