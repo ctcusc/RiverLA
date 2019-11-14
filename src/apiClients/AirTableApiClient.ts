@@ -33,6 +33,35 @@ class AirTableApiClient {
     );
     let organizations: Organization[] = [];
 
+    type TFieldName =
+      | 'Name'
+      | 'Description'
+      | 'Activity'
+      | 'Interest Categories'
+      | 'River Section'
+      | 'Phone Number'
+      | 'URL'
+      | 'Email';
+
+    interface Record {
+      get: (fieldName: TFieldName) => string | string[];
+    }
+
+    function recordToOrganization(record: Record): Organization {
+      return {
+        name: record.get('Name') as string,
+        description: record.get('Description') as string,
+        activity: record.get('Activity') as string,
+        interestCategories: record.get('Interest Categories') as string[],
+        riverSection: record.get('River Section') as string,
+        phoneNumber: record.get('Phone Number') as string,
+        url: record.get('URL') as string,
+        email: record.get('Email') as string,
+      };
+    }
+
+    const empty = (element: any) => element != 'undefined';
+
     const promise: Promise<Organization[]> = new Promise((resolve, reject) => {
       this.base('Organizations')
         .select({
@@ -41,37 +70,24 @@ class AirTableApiClient {
         .eachPage(
           (records: any[], fetchNextPage: any) => {
             let filteredRecords: any[] = records;
+            filteredRecords = records.filter(record => {
+              return record != 'undefined';
+            });
+            organizations = organizations.concat(filteredRecords.map(recordToOrganization));
             if (typeof riverSections !== 'undefined') {
-              filteredRecords = records.filter(record => {
-                return riverSections.includes(record.get('River Section'));
+              organizations = organizations.filter(organization => {
+                return riverSections.includes(organization.riverSection);
               });
             }
             if (typeof interestCategories !== 'undefined') {
-              filteredRecords = filteredRecords.filter(record => {
-                return (
-                  interestCategories.filter(category => {
-                    return record.get('Interest Categories').includes(category);
-                  }).length != 0
-                );
+              organizations = organizations.filter(organization => {
+                return interestCategories
+                  .filter(category => {
+                    return organization.interestCategories.includes(category);
+                  })
+                  .some(empty);
               });
             }
-            organizations = organizations.concat(
-              filteredRecords.map((record: any) => {
-                if (typeof record === 'undefined') {
-                }
-                const org: Organization = {
-                  name: record.get('Name'),
-                  description: record.get('Description'),
-                  activity: record.get('Activity'),
-                  interestCategories: record.get('Interest Categories'),
-                  riverSection: record.get('River Section'),
-                  phoneNumber: record.get('Phone Number'),
-                  url: record.get('URL'),
-                  email: record.get('Email'),
-                };
-                return org;
-              }),
-            );
             fetchNextPage();
           },
           function done(err: Error) {
