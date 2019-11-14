@@ -22,7 +22,7 @@ jobs:
             - node_modules
           key: v1-dependencies-{{ checksum "package.json" }}
       - run: npm test
-  test-coverage:
+  validate-coverage:
     docker:
       - image: circleci/node:10.16
     working_directory: ~/repo
@@ -37,7 +37,7 @@ jobs:
           paths:
             - node_modules
           key: v1-dependencies-{{ checksum "package.json" }}
-      - run: npm run test-coverage
+      - run: npm run validate-coverage
   deploy:
     executor: heroku/default
     steps:
@@ -51,7 +51,7 @@ workflows:
   test_and_deploy:
     jobs:
       - test
-      - test-coverage
+      - validate-coverage
       - hold:
           type: approval
           requires:
