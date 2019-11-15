@@ -56,7 +56,7 @@ const environment: Environment = {
     sendgrid: getString(process.env.SENDGRID_API_KEY, 'SENDGRID_API_KEY'),
   },
   server: {
-    port: getInteger(process.env.PORT, 'PORT', 3000),
+    port: getInteger(process.env.PORT, 'PORT', 80),
   },
 };
 
