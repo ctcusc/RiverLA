@@ -58,7 +58,7 @@ const env: Environment = {
   },
   nodeEnv: getEnvironment(process.env.NODE_ENV),
   server: {
-    port: getInteger(process.env.PORT, 'PORT', 3000),
+    port: getInteger(process.env.PORT, 'PORT', 80),
   },
 };
 
