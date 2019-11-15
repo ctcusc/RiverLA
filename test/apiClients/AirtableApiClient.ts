@@ -1,8 +1,9 @@
 import AirTableApiClient, { AirTableFilters, Organization } from '../../src/apiClients/AirTableApiClient';
+import env from '../../src/env';
 import nock from 'nock';
 import test from 'ava';
 
-const AIRTABLE_API_URL = 'https://api.airtable.com/v0/appEHr8iHguvEfXTQ';
+const AIRTABLE_API_URL = `https://api.airtable.com/v0/${env.airtableBaseId}`;
 
 const records: any = [
   {
@@ -87,7 +88,7 @@ const org3: Organization = {
 };
 
 test('Returns one page of results properly', async t => {
-  const airtableApiClient: AirTableApiClient = new AirTableApiClient('keyzxy');
+  const airtableApiClient: AirTableApiClient = new AirTableApiClient();
 
   nock(AIRTABLE_API_URL)
     .get('/Organizations')
@@ -96,13 +97,13 @@ test('Returns one page of results properly', async t => {
       records,
     });
 
-  const organizations: Organization[] = await airtableApiClient.getAllOrganizations();
+  const organizations: Organization[] = await airtableApiClient.getOrganizations();
   const answer: Organization[] = [org1, org2, org3];
   t.deepEqual(organizations, answer);
 });
 
 test('Returns one page of filtered river results properly', async t => {
-  const airtableApiClient: AirTableApiClient = new AirTableApiClient('keyzxy');
+  const airtableApiClient: AirTableApiClient = new AirTableApiClient();
 
   nock(AIRTABLE_API_URL)
     .get('/Organizations')
@@ -115,13 +116,13 @@ test('Returns one page of filtered river results properly', async t => {
     riverSections: ['Middle'],
   };
 
-  const organizations: Organization[] = await airtableApiClient.getAllOrganizations(airTableFilters);
+  const organizations: Organization[] = await airtableApiClient.getOrganizations(airTableFilters);
   const answer: Organization[] = [org2];
   t.deepEqual(organizations, answer);
 });
 
 test('Returns one page of filtered interest categories results properly', async t => {
-  const airtableApiClient: AirTableApiClient = new AirTableApiClient('keyzxy');
+  const airtableApiClient: AirTableApiClient = new AirTableApiClient();
 
   nock(AIRTABLE_API_URL)
     .get('/Organizations')
@@ -134,13 +135,13 @@ test('Returns one page of filtered interest categories results properly', async 
     interestCategories: ['Environmental Causes'],
   };
 
-  const organizations: Organization[] = await airtableApiClient.getAllOrganizations(airTableFilters);
+  const organizations: Organization[] = await airtableApiClient.getOrganizations(airTableFilters);
   const answer: Organization[] = [org2];
   t.deepEqual(organizations, answer);
 });
 
 test.serial('Returns one page of filtered both empty results properly', async t => {
-  const airtableApiClient: AirTableApiClient = new AirTableApiClient('keyzxy');
+  const airtableApiClient: AirTableApiClient = new AirTableApiClient();
 
   nock(AIRTABLE_API_URL)
     .get('/Organizations')
@@ -154,13 +155,13 @@ test.serial('Returns one page of filtered both empty results properly', async t 
     interestCategories: ['Social Justice and Recreation'],
   };
 
-  const organizations: Organization[] = await airtableApiClient.getAllOrganizations(airTableFilters);
+  const organizations: Organization[] = await airtableApiClient.getOrganizations(airTableFilters);
   const answer: Organization[] = [];
   t.deepEqual(organizations, answer);
 });
 
 test('Returns one page of filtered both results properly', async t => {
-  const airtableApiClient: AirTableApiClient = new AirTableApiClient('keyzxy');
+  const airtableApiClient: AirTableApiClient = new AirTableApiClient();
 
   nock(AIRTABLE_API_URL)
     .get('/Organizations')
@@ -174,13 +175,13 @@ test('Returns one page of filtered both results properly', async t => {
     interestCategories: ['Social Justice and Recreation', 'Environmental Causes'],
   };
 
-  const organizations: Organization[] = await airtableApiClient.getAllOrganizations(airTableFilters);
+  const organizations: Organization[] = await airtableApiClient.getOrganizations(airTableFilters);
   const answer: Organization[] = [org2];
   t.deepEqual(organizations, answer);
 });
 
 test('Returns one page of filtered two interest categories results properly', async t => {
-  const airtableApiClient: AirTableApiClient = new AirTableApiClient('keyzxy');
+  const airtableApiClient: AirTableApiClient = new AirTableApiClient();
 
   nock(AIRTABLE_API_URL)
     .get('/Organizations')
@@ -193,13 +194,13 @@ test('Returns one page of filtered two interest categories results properly', as
     interestCategories: ['Social Justice and Recreation', 'Environmental Causes'],
   };
 
-  const organizations: Organization[] = await airtableApiClient.getAllOrganizations(airTableFilters);
+  const organizations: Organization[] = await airtableApiClient.getOrganizations(airTableFilters);
   const answer: Organization[] = [org2, org3];
   t.deepEqual(organizations, answer);
 });
 
 test('Returns one page of filtered two river results properly', async t => {
-  const airtableApiClient: AirTableApiClient = new AirTableApiClient('keyzxy');
+  const airtableApiClient: AirTableApiClient = new AirTableApiClient();
 
   nock(AIRTABLE_API_URL)
     .get('/Organizations')
@@ -212,7 +213,7 @@ test('Returns one page of filtered two river results properly', async t => {
     riverSections: ['Middle', 'Lower'],
   };
 
-  const organizations: Organization[] = await airtableApiClient.getAllOrganizations(airTableFilters);
+  const organizations: Organization[] = await airtableApiClient.getOrganizations(airTableFilters);
   const answer: Organization[] = [org2, org3];
   t.deepEqual(organizations, answer);
 });
