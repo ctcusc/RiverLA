@@ -15,6 +15,7 @@ module.exports =  {
       'ignoreDeclarationSort': false,
       'ignoreMemberSort': false,
       'memberSyntaxSortOrder': ['none', 'all', 'multiple', 'single']
-    }]
+    }],
+    '@typescript-eslint/explicit-function-return-type': 'off',
   },
 };
