@@ -1,33 +1,37 @@
-import { InvalidParametersError } from '../errors';
-import { MailData } from '@sendgrid/helpers/classes/mail';
-import env from '../env';
-import sgMail from '@sendgrid/mail';
+// TODO: Need to come up with better name for interface
+interface EmailData {
+  name: string;
+  interest: [
+    {
+      name: string;
+    },
+  ];
+  organizations: [
+    {
+      name: string;
+      website: string;
+      email: string;
+      phoneNumber: string;
+    },
+  ];
+}
 
 class SendGridApiClient {
   private apiKey: string;
 
   constructor(apiKey: string) {
-    if (apiKey === '') {
-      throw new InvalidParametersError('API Key is empty.');
-    }
     this.apiKey = apiKey;
+    // remove this log when this API key is finally used somewhere
+    console.log(`SendGridAPIClient initialized with api key ${this.apiKey}`);
   }
 
-  async sendEmail(senderEmailAddress: string, recipientEmailAddress: string, emailBody: string, emailSubject: string) {
-    sgMail.setApiKey(this.apiKey);
-    const mailData: MailData = {
-      to: recipientEmailAddress,
-      from: senderEmailAddress,
-      subject: emailSubject,
-      text: emailBody,
-      mailSettings: {
-        sandboxMode: {
-          enable: env.nodeEnv === 'development',
-        },
-      },
-    };
-    const [sgResponse] = await sgMail.send([mailData]);
-    return sgResponse;
+  sendEmail(senderEmailAddress: string, recipientEmailAddress: string, emailBody: string): void {
+    console.log(`sendEmail called with arguments:`, senderEmailAddress, recipientEmailAddress, emailBody);
+  }
+
+  // TODO:  Need to come up with better name for function
+  sendVolunteerMatchEmail(senderEmailAddress: string, recipientEmailAddress: string, emailData: EmailData): void {
+    console.log(`Email Data: `, senderEmailAddress, recipientEmailAddress, emailData);
   }
 }
 
