@@ -17,6 +17,13 @@ export interface Organization {
   email: string;
 }
 
+interface ErrorObject {
+  fields: {
+    Reason: string;
+    Organization?: number;
+  };
+}
+
 type TFieldName =
   | 'Name'
   | 'Description'
@@ -77,6 +84,49 @@ class AirTableApiClient {
     }
 
     return organizations;
+  }
+
+  async logError(message: string, oragnizationId?: number): Promise<boolean> {
+    const promise: Promise<boolean> = new Promise(async resolve => {
+      const error: ErrorObject = {
+        fields: {
+          Reason: message,
+        },
+      };
+
+      if (oragnizationId != undefined) {
+        error.fields['Organization'] = oragnizationId;
+      }
+
+      try {
+        await this.base('Errors').create([error]);
+
+        const allRecords = await this.base('Errors')
+          .select({
+            view: 'Grid view',
+            maxRecords: 200,
+          })
+          .all();
+
+        if (allRecords.length == 2) {
+          let deleteSet: string[] = [];
+          for (let i = 0; i < 10; i++) {
+            deleteSet.push(allRecords[0][i].getId());
+          }
+          await this.base('Errors').destroy(deleteSet);
+
+          deleteSet = [];
+          for (let i = 10; i < 20; i++) {
+            deleteSet.push(allRecords[0][i].getId());
+          }
+          await this.base('Errors').destroy(deleteSet);
+        }
+      } catch (e) {
+        resolve(false);
+      }
+      resolve(true);
+    });
+    return promise;
   }
 }
 
