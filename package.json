@@ -13,7 +13,6 @@
     "postinstall": "npm run build",
     "start": "node ./dist/index.js",
     "dev": "concurrently -k -p \"[{name}]\" -n \"TypeScript,Node\" -c \"cyan.bold,green.bold\" \"npm run watch-ts\" \"npm run watch-node\"",
-    "dev-windows": "concurrently -k -p \"[{name}]\" -n \"TypeScript,Node\" -c \"cyan.bold,green.bold\" \"npm run watch-ts\" \"npm run watch-node\"",
     "test": "tsc && ava",
     "test-coverage": "tsc && nyc ava",
     "validate-coverage": "nyc --check-coverage npm test",
@@ -47,7 +46,7 @@
     "eslint-plugin-prettier": "^3.1.1",
     "husky": "^3.0.7",
     "lint-staged": "^9.4.0",
-    "nock": "^11.5.0",
+    "nock": "^11.7.0",
     "nodemon": "^1.19.2",
     "nyc": "^14.1.1",
     "prettier": "^1.18.2",
@@ -57,10 +56,17 @@
     "typescript": "^3.6.3"
   },
   "dependencies": {
+    "@types/airtable": "^0.5.6",
+    "@types/sinon": "^7.5.0",
+    "airtable": "^0.7.2",
+    "@sendgrid/mail": "^6.4.0",
     "body-parser": "^1.19.0",
+    "colors": "^1.4.0",
     "express": "^4.17.1",
     "helmet": "^3.21.1",
     "morgan": "^1.9.1",
+    "ngrok": "^3.2.5",
+    "sinon": "^7.5.0",
     "superagent": "^5.1.0"
   },
   "ava": {

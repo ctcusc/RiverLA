@@ -11,6 +11,7 @@ interface Environment {
   server: {
     port: number;
   };
+  airtableBaseId: string;
 }
 
 function getInteger(val: string | undefined, variableName: string, defaultValue?: number): number {
@@ -49,15 +50,16 @@ function getEnvironment(val: string | undefined): TNodeEnv {
   throw new InvalidParametersError(`Invalid value for NODE_ENV: ${val}`);
 }
 
-const environment: Environment = {
-  nodeEnv: getEnvironment(process.env.NODE_ENV),
+const env: Environment = {
+  airtableBaseId: getString(process.env.AIRTABLE_BASE_ID, 'AIRTABLE_BASE_ID'),
   apiKeys: {
     airtable: getString(process.env.AIRTABLE_API_KEY, 'AIRTABLE_API_KEY'),
     sendgrid: getString(process.env.SENDGRID_API_KEY, 'SENDGRID_API_KEY'),
   },
+  nodeEnv: getEnvironment(process.env.NODE_ENV),
   server: {
-    port: getInteger(process.env.PORT, 'PORT', 3000),
+    port: getInteger(process.env.PORT, 'PORT', 80),
   },
 };
 
-export default environment;
+export default env;
