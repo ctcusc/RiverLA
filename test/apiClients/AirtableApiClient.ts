@@ -214,6 +214,6 @@ test('Returns one page of filtered two river results properly', async t => {
   };
 
   const organizations: Organization[] = await airtableApiClient.getOrganizations(airTableFilters);
-  const answer: Organization[] = [org2, org3];
+  const answer: Organization[] = [org2];
   t.deepEqual(organizations, answer);
 });
