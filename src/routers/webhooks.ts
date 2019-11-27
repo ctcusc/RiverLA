@@ -1,3 +1,4 @@
+import env from '../env';
 import express from 'express';
 
 interface NationBuilderPerson {
@@ -5,7 +6,6 @@ interface NationBuilderPerson {
   firstName: string;
   phone: string;
 }
-
 const router = express.Router();
 
 router.post('/nationbuilder/personCreated', function(req: any, res: any) {
@@ -16,8 +16,13 @@ router.post('/nationbuilder/personCreated', function(req: any, res: any) {
       firstName,
       phone,
     };
-    console.log(nationBuilderPerson);
-    res.json(nationBuilderPerson);
+    if (env.nationbuilderWebhookToken == 'aFSno6V23BRE9u16fh9w3YtJZHuVyLcbt38SJmNhESFG5uBVdzLJ3g0zTp') {
+      console.log(nationBuilderPerson);
+      res.json(nationBuilderPerson);
+      res.status(200);
+    } else {
+      res.sendStatus(404);
+    }
   }
 });
 
