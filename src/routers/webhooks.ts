@@ -21,7 +21,7 @@ router.post('/nationbuilder/personCreated', function(req: any, res: any) {
       res.json(nationBuilderPerson);
       res.status(200);
     } else {
-      res.sendStatus(404);
+      res.status(404);
     }
   }
 });
