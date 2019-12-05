@@ -1,4 +1,5 @@
 import Airtable from 'airtable';
+import CachedItem from '../../src/utils/CachedItem';
 import env from '../env';
 
 export interface AirTableFilters {
@@ -50,16 +51,22 @@ const BASE_NAMES = {
 
 class AirTableApiClient {
   private base: any;
+  private cache: CachedItem<any>;
 
   constructor() {
     this.base = new Airtable().base(env.airtableBaseId);
+    this.cache = new CachedItem<any>(1000);
   }
 
   async getOrganizations(filters: AirTableFilters = {}): Promise<Organization[]> {
     const { interestCategories, riverSections } = filters;
-    const organizationRecords = await this.base(BASE_NAMES.ORGANIZATIONS)
-      .select({ view: 'Grid view' })
-      .all();
+    let organizationRecords = this.cache.get();
+    if (organizationRecords === null) {
+      organizationRecords = await this.base(BASE_NAMES.ORGANIZATIONS)
+        .select({ view: 'Grid view' })
+        .all();
+      this.cache.set(organizationRecords);
+    }
 
     let organizations: Organization[] = organizationRecords
       .filter((record?: Record) => record !== undefined)
@@ -70,6 +77,7 @@ class AirTableApiClient {
         return riverSections.includes(organization.riverSection);
       });
     }
+
     if (interestCategories !== undefined) {
       organizations = organizations.filter(organization => {
         return interestCategories.some(category => organization.interestCategories.includes(category));

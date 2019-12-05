@@ -3,7 +3,7 @@ import { Organization } from '../../src/apiClients/AirTableApiClient';
 import sinon from 'sinon';
 import test from 'ava';
 
-const org: Organization = {
+const org1: Organization = {
   name: 'Chrysalis Enterprises',
   riverSection: 'Upper',
   activity: 'Needs Volunteers',
@@ -15,24 +15,62 @@ const org: Organization = {
   interestCategories: ['Water Organizations'],
 };
 
-const cache: CachedItem<Organization> = new CachedItem<Organization>(3000);
+const org2: Organization = {
+  name: 'Chrysalis Enterprises',
+  riverSection: 'Upper',
+  activity: 'Needs Volunteers',
+  description:
+    'Chrysalis is a nonprofit organization dedicated to creating a pathway to self-sufficiency for homeless and low-income individuals by providing the res...',
+  email: 'fakeemail@chrysalis.org',
+  phoneNumber: '(123) 456-7890',
+  url: 'https://changelives.org/',
+  interestCategories: ['Water Organizations'],
+};
 
-const faketimer = sinon.useFakeTimers();
+const org3: Organization = {
+  name: 'ctc',
+  riverSection: 'Lower',
+  activity: 'Needs Volunteers',
+  description: 'test data',
+  email: 'fakeemail@chrysalis.org',
+  phoneNumber: '(999) 999-9999',
+  url: 'https://changelives.org/',
+  interestCategories: ['Social Justice and Recreation'],
+};
 
-test.serial('my passing test', t => {
-  t.pass();
+let faketimer: sinon.SinonFakeTimers;
+
+test.beforeEach(() => {
+  faketimer = sinon.useFakeTimers();
 });
 
-test.serial('Get null if no value is set to CachedItem class', async t => {
+test.afterEach(() => {
+  faketimer.restore();
+});
+
+test.serial('Get null if no value is set to CachedItem class', t => {
+  const cache: CachedItem<Organization> = new CachedItem<Organization>(3000);
   t.is(cache.get(), null);
 });
 
-test.serial('Set a valid value to CachedItem class', async t => {
-  cache.set(org);
-  t.deepEqual(cache.get(), org);
+test.serial('Set a valid value to CachedItem class', t => {
+  const cache: CachedItem<Organization> = new CachedItem<Organization>(3000);
+  cache.set(org1);
+  t.deepEqual(cache.get(), org1);
 });
 
-test.serial('Value in CachedItem class invalidated after ttl milliseconds', async t => {
+test.serial('Value in CachedItem class invalidated after ttl milliseconds', t => {
+  const cache: CachedItem<Organization> = new CachedItem<Organization>(3000);
+  cache.set(org2);
   faketimer.tick(3000);
   t.is(cache.get(), null);
+});
+
+test.serial('New value set in the middle of the ttl interval not invalidated', t => {
+  const cache: CachedItem<Organization> = new CachedItem<Organization>(3000);
+  cache.set(org2);
+  faketimer.tick(1000);
+  cache.set(org3);
+  faketimer.tick(2500);
+  t.deepEqual(cache.get(), org3);
 });
