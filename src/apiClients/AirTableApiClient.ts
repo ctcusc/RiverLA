@@ -1,5 +1,5 @@
 import Airtable from 'airtable';
-import CachedItem from '../../src/utils/CachedItem';
+import CachedItem from '../utils/CachedItem';
 import env from '../env';
 
 export interface AirTableFilters {
@@ -17,7 +17,7 @@ export interface Organization {
   url: string;
   email: string;
 }
-
+/**
 type TFieldName =
   | 'Name'
   | 'Description'
@@ -27,21 +27,30 @@ type TFieldName =
   | 'Phone Number'
   | 'URL'
   | 'Email';
-
+*/
 interface Record {
-  get: (fieldName: TFieldName) => string | string[];
+  fields: {
+    ['Name']: string;
+    ['Description']: string;
+    ['Activity']: string;
+    ['Interest Categories']: string[];
+    ['River Section']: string;
+    ['Phone Number']: string;
+    ['URL']: string;
+    ['Email']: string;
+  };
 }
 
 function recordToOrganization(record: Record): Organization {
   return {
-    name: record.get('Name') as string,
-    description: record.get('Description') as string,
-    activity: record.get('Activity') as string,
-    interestCategories: record.get('Interest Categories') as string[],
-    riverSection: record.get('River Section') as string,
-    phoneNumber: record.get('Phone Number') as string,
-    url: record.get('URL') as string,
-    email: record.get('Email') as string,
+    name: record.fields['Name'],
+    description: record.fields['Description'],
+    activity: record.fields['Activity'],
+    interestCategories: record.fields['Interest Categories'],
+    riverSection: record.fields['River Section'],
+    phoneNumber: record.fields['Phone Number'],
+    url: record.fields['URL'],
+    email: record.fields['Email'],
   };
 }
 
@@ -65,6 +74,7 @@ class AirTableApiClient {
       organizationRecords = await this.base(BASE_NAMES.ORGANIZATIONS)
         .select({ view: 'Grid view' })
         .all();
+      console.log(organizationRecords);
       this.cache.set(organizationRecords);
     }
 
