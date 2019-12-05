@@ -17,17 +17,7 @@ export interface Organization {
   url: string;
   email: string;
 }
-/**
-type TFieldName =
-  | 'Name'
-  | 'Description'
-  | 'Activity'
-  | 'Interest Categories'
-  | 'River Section'
-  | 'Phone Number'
-  | 'URL'
-  | 'Email';
-*/
+
 interface Record {
   fields: {
     ['Name']: string;
@@ -60,23 +50,24 @@ const BASE_NAMES = {
 
 class AirTableApiClient {
   private base: any;
-  private cache: CachedItem<Organization[]>;
+  private cachedOrganizations: CachedItem<Organization[]>;
 
   constructor() {
     this.base = new Airtable().base(env.airtableBaseId);
-    this.cache = new CachedItem<Organization[]>(1000);
+    this.cachedOrganizations = new CachedItem<Organization[]>(1000);
   }
 
   async getOrganizations(filters: AirTableFilters = {}): Promise<Organization[]> {
     const { interestCategories, riverSections } = filters;
-    let organizations = this.cache.get();
+    let organizations = this.cachedOrganizations.get();
     if (organizations === null) {
       const organizationRecords: Record[] = await this.base(BASE_NAMES.ORGANIZATIONS)
         .select({ view: 'Grid view' })
         .all();
 
       organizations = organizationRecords.filter((record?: Record) => record !== undefined).map(recordToOrganization);
-      this.cache.set(organizations);
+
+      this.cachedOrganizations.set(organizations);
     }
 
     if (riverSections !== undefined) {
@@ -84,7 +75,6 @@ class AirTableApiClient {
         return riverSections.includes(organization.riverSection);
       });
     }
-
     if (interestCategories !== undefined) {
       organizations = organizations.filter(organization => {
         return interestCategories.some(category => organization.interestCategories.includes(category));
