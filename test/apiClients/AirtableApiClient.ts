@@ -289,8 +289,8 @@ test.serial('Request to AirTable url made when ttl milliseconds passed', async t
     });
 
   organizations = await airtableApiClient.getOrganizations();
-  //the value of organizations SHOULD be org1 but it is empty instead
   const answer: Organization[] = [org1];
   fakeTimer.restore();
   t.deepEqual(organizations, answer);
+  t.fail();
 });
