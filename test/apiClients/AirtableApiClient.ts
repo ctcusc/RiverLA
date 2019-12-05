@@ -292,5 +292,4 @@ test.serial('Request to AirTable url made when ttl milliseconds passed', async t
   const answer: Organization[] = [org1];
   fakeTimer.restore();
   t.deepEqual(organizations, answer);
-  t.fail();
 });
