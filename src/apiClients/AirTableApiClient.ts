@@ -1,6 +1,7 @@
 import Airtable from 'airtable';
 import env from '../env';
 
+const MAXERRORLENGTH = 100;
 export interface AirTableFilters {
   interestCategories?: string[];
   riverSections?: string[];
@@ -17,10 +18,12 @@ export interface Organization {
   email: string;
 }
 
-interface ErrorObject {
+export interface ErrorObject {
   fields: {
-    Reason: string;
-    Organization?: number;
+    Name?: string;
+    Message?: string;
+    Status?: string;
+    Organization?: [string];
   };
 }
 
@@ -86,42 +89,34 @@ class AirTableApiClient {
     return organizations;
   }
 
-  async logError(message: string, oragnizationId?: number): Promise<boolean> {
+  async logError(error: ErrorObject): Promise<boolean> {
     const promise: Promise<boolean> = new Promise(async resolve => {
-      const error: ErrorObject = {
-        fields: {
-          Reason: message,
-        },
-      };
-
-      if (oragnizationId != undefined) {
-        error.fields['Organization'] = oragnizationId;
-      }
-
       try {
         await this.base('Errors').create([error]);
 
         const allRecords = await this.base('Errors')
           .select({
             view: 'Grid view',
-            maxRecords: 200,
+            maxRecords: 100,
           })
           .all();
 
-        if (allRecords.length == 2) {
+        if (allRecords.length > MAXERRORLENGTH) {
           let deleteSet: string[] = [];
           for (let i = 0; i < 10; i++) {
-            deleteSet.push(allRecords[0][i].getId());
+            deleteSet.push(allRecords[i].getId());
           }
           await this.base('Errors').destroy(deleteSet);
 
           deleteSet = [];
           for (let i = 10; i < 20; i++) {
-            deleteSet.push(allRecords[0][i].getId());
+            deleteSet.push(allRecords[i].getId());
           }
           await this.base('Errors').destroy(deleteSet);
         }
       } catch (e) {
+        console.log('Failed to log message.');
+        console.log(e);
         resolve(false);
       }
       resolve(true);
