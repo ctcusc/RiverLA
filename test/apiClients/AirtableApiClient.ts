@@ -285,11 +285,11 @@ test.serial('Request to AirTable url made when ttl milliseconds passed', async t
     .get('/Organizations')
     .query({ view: 'Grid view' })
     .reply(200, {
-      org1,
+      records: [org1],
     });
 
   organizations = await airtableApiClient.getOrganizations();
-  const answer: Organization[] = [];
   fakeTimer.restore();
-  t.deepEqual(organizations, answer);
+  t.deepEqual(organizations, [org1]);
+  t.fail();
 });

@@ -51,26 +51,24 @@ const BASE_NAMES = {
 
 class AirTableApiClient {
   private base: any;
-  private cache: CachedItem<any>;
+  private cache: CachedItem<Organization[]>;
 
   constructor() {
     this.base = new Airtable().base(env.airtableBaseId);
-    this.cache = new CachedItem<any>(1000);
+    this.cache = new CachedItem<Organization[]>(1000);
   }
 
   async getOrganizations(filters: AirTableFilters = {}): Promise<Organization[]> {
     const { interestCategories, riverSections } = filters;
-    let organizationRecords = this.cache.get();
-    if (organizationRecords === null) {
-      organizationRecords = await this.base(BASE_NAMES.ORGANIZATIONS)
+    let organizations = this.cache.get();
+    if (organizations === null) {
+      const organizationRecords: Record[] = await this.base(BASE_NAMES.ORGANIZATIONS)
         .select({ view: 'Grid view' })
         .all();
-      this.cache.set(organizationRecords);
-    }
+      organizations = organizationRecords.filter((record?: Record) => record !== undefined).map(recordToOrganization);
 
-    let organizations: Organization[] = organizationRecords
-      .filter((record?: Record) => record !== undefined)
-      .map(recordToOrganization);
+      this.cache.set(organizations);
+    }
 
     if (riverSections !== undefined) {
       organizations = organizations.filter(organization => {
