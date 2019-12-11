@@ -3,12 +3,11 @@ import app from '../src/app';
 import env from '../src/env';
 import express from 'express';
 import request from 'supertest';
-import sinon from 'sinon';
 import test from 'ava';
+import sinon from 'sinon';
 
 const webtoken1 = 'abc';
 const webtoken2 = 'def';
-var unused: any;
 
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
