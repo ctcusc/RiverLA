@@ -13,6 +13,7 @@ interface Environment {
     port: number;
   };
   airtableBaseId: string;
+  nationbuilderWebhookToken: string;
 }
 
 function getInteger(variableName: string, defaultValue?: number): number {
@@ -55,7 +56,6 @@ function getEnvironment(): TNodeEnv {
 }
 
 const env: Environment = {
-  airtableBaseId: getString('AIRTABLE_BASE_ID'),
   apiKeys: {
     airtable: getString('AIRTABLE_API_KEY'),
     sendgrid: getString('SENDGRID_API_KEY'),
@@ -64,6 +64,8 @@ const env: Environment = {
   server: {
     port: getInteger('PORT', 80),
   },
+  airtableBaseId: getString('AIRTABLE_BASE_ID'),
+  nationbuilderWebhookToken: getString('NATIONBUILDER_WEBHOOK_TOKEN'),
 };
 
 export default env;
