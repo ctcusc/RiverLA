@@ -1,3 +1,4 @@
+/* istanbul ignore file */
 import { InvalidParametersError } from './errors';
 
 type TNodeEnv = 'development' | 'staging' | 'production' | 'test';
