@@ -17,17 +17,13 @@ router.post('/nationbuilder/personCreated', function(req, res) {
         firstName,
         phone,
       };
-      res.json(nationBuilderPerson);
-      res.status(200);
-    } else {
-      res.json({});
-      res.status(200);
+      return res.json(nationBuilderPerson);
     }
-  } else {
-    res.status(404).send({
-      message: '404: Page Not Found',
-    });
+
+    return res.sendStatus(200);
   }
+
+  return res.sendStatus(404);
 });
 
 export default router;

@@ -48,35 +48,36 @@ const user2: any = {
 };
 /* eslint-enable @typescript-eslint/camelcase */
 
+test.beforeEach(() => {
+  sinon.stub(env, 'nationbuilderWebhookToken');
+});
+
+test.afterEach.always(() => {
+  sinon.restore();
+});
+
 test.serial('404 error', async t => {
-  const stub = sinon.stub(env, 'nationbuilderWebhookToken').value(webtoken2);
-  stub();
+  env.nationbuilderWebhookToken.value(webtoken2);
   const res = await request(app)
     .post('/webhooks/nationbuilder/personCreated')
     .send(user2);
   t.is(res.status, 404);
-  sinon.restore();
 });
 
 test.serial('testing is_volunteer true', async t => {
-  const stub = sinon.stub(env, 'nationbuilderWebhookToken').value(webtoken1);
-  stub();
+  env.nationbuilderWebhookToken.value(webtoken1);
   t.log(process.env.NATIONBUILDER_WEBHOOK_TOKEN);
   const res = await request(app)
     .post('/webhooks/nationbuilder/personCreated')
     .send(user1);
   t.deepEqual(res.status, 200);
   t.deepEqual(res.body, result1);
-  sinon.restore();
 });
 
 test.serial('testing is_volunteer false', async t => {
-  const stub = sinon.stub(env, 'nationbuilderWebhookToken').value(webtoken1);
-  stub();
+  env.nationbuilderWebhookToken.value(webtoken1);
   const res = await request(app)
     .post('/webhooks/nationbuilder/personCreated')
     .send(user2);
-  t.deepEqual(res.body, {});
   t.is(res.status, 200);
-  sinon.restore();
 });
