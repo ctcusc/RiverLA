@@ -29,16 +29,20 @@ jobs:
       - heroku/install
       - heroku/deploy-via-git:
           app-name: riverla-staging
+  lint:
+    - run: npm run lint
 
 workflows:
   version: 2
   test_and_deploy:
     jobs:
       - test
+      - lint
       - hold:
           type: approval
           requires:
             - test
+            - lint
           filters:
             branches:
               only: master
