@@ -1,6 +1,6 @@
 import { NationBuilderPerson } from '../src/routers/webhooks';
-import app from '../src/app';
 import env from '../src/env';
+import app from '../src/app';
 import express from 'express';
 import request from 'supertest';
 import sinon from 'sinon';
