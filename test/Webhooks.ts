@@ -3,8 +3,8 @@ import app from '../src/app';
 import env from '../src/env';
 import express from 'express';
 import request from 'supertest';
-import test from 'ava';
 import sinon from 'sinon';
+import test from 'ava';
 
 const webtoken1 = 'abc';
 const webtoken2 = 'def';
