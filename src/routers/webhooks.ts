@@ -41,13 +41,7 @@ router.post('/nationbuilder/personCreated', async function(req, res) {
     environmental: true,
     people: true,
   };
-  if (tags.includes('Action: Volunteer Yes: All activities')) {
-    interests = {
-      water: true,
-      environmental: true,
-      people: true,
-    };
-  } else {
+  if (!tags.includes('Action: Volunteer Yes: All activities')) {
     interests = {
       water: tags.includes('Action: Volunteer Yes: Water Organizations'),
       environmental: tags.includes('Action: Volunteer Yes: Environmental'),

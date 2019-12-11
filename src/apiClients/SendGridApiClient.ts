@@ -1,6 +1,6 @@
 import { InvalidParametersError } from '../errors';
 import { MailData } from '@sendgrid/helpers/classes/mail';
-import env from '../env';
+// import env from '../env';
 import sgMail from '@sendgrid/mail';
 
 export interface DynamicTemplateData {
