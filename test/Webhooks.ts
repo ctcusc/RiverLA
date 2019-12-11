@@ -8,7 +8,7 @@ import test from 'ava';
 
 const webtoken1 = 'abc';
 const webtoken2 = 'def';
-const madleyn: any = 'madelyn';
+var unused: any;
 
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
