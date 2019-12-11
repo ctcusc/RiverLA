@@ -30,7 +30,8 @@ jobs:
       - heroku/deploy-via-git:
           app-name: riverla-staging
   lint:
-    - run: npm run lint
+    steps:
+      - run: npm run lint
 
 workflows:
   version: 2
