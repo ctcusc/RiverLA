@@ -30,6 +30,8 @@ jobs:
       - heroku/deploy-via-git:
           app-name: riverla-staging
   lint:
+    docker:
+      - image: circleci/node:10.16
     steps:
       - run: npm run lint
 
