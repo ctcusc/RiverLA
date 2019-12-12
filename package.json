@@ -14,6 +14,7 @@
     "start": "node ./dist/index.js",
     "dev": "concurrently -k -p \"[{name}]\" -n \"TypeScript,Node\" -c \"cyan.bold,green.bold\" \"npm run watch-ts\" \"npm run watch-node\"",
     "test": "tsc && ava",
+    "test-integration": "node test_integration/test.js --experimental-modules",
     "test-coverage": "tsc && nyc ava",
     "watch-node": "nodemon -r dotenv/config dist/index.js",
     "watch-ts": "tsc -w"
@@ -55,10 +56,10 @@
     "typescript": "^3.6.3"
   },
   "dependencies": {
+    "@sendgrid/mail": "^6.4.0",
     "@types/airtable": "^0.5.6",
     "@types/sinon": "^7.5.0",
     "airtable": "^0.7.2",
-    "@sendgrid/mail": "^6.4.0",
     "body-parser": "^1.19.0",
     "colors": "^1.4.0",
     "express": "^4.17.1",
@@ -66,7 +67,7 @@
     "morgan": "^1.9.1",
     "ngrok": "^3.2.5",
     "sinon": "^7.5.0",
-    "superagent": "^5.1.0"
+    "superagent": "^5.1.2"
   },
   "ava": {
     "compileEnhancements": false,
