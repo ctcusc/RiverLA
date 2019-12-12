@@ -1,4 +1,4 @@
-// Import modules
+/* istanbul ignore file */
 import apiClients from './apiClients';
 import app from './app';
 import colors from 'colors/safe';
