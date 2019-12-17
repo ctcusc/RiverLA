@@ -6,12 +6,6 @@ import env from '../env';
 import express from 'express';
 const { airtableApiClient, sendgridApiClient } = apiClients;
 
-interface Interests {
-  water: boolean;
-  environmental: boolean;
-  people: boolean;
-}
-
 export interface NationBuilderPerson {
   email: string;
   firstName: string;
