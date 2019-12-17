@@ -1,17 +1,18 @@
 import { InvalidParametersError } from '../errors';
 import { MailData } from '@sendgrid/helpers/classes/mail';
 // import env from '../env';
+import env from '../env';
 import sgMail from '@sendgrid/mail';
 
 export interface DynamicTemplateData {
   name: string;
-  interests: Array<{ name: string }>;
-  organizations: Array<{
+  interests: string[];
+  organizations: {
     name: string;
     website: string;
     email: string;
     phoneNumber: string;
-  }>;
+  }[];
 }
 
 class SendGridApiClient {
@@ -31,8 +32,7 @@ class SendGridApiClient {
     templateId: string,
     dynamicTemplateData: DynamicTemplateData,
   ) {
-    // const enableSandbox = env.nodeEnv === 'development';
-    const enableSandbox = false;
+    const enableSandbox = env.nodeEnv === 'development';
 
     sgMail.setApiKey(this.apiKey);
     const mailData: MailData = {
