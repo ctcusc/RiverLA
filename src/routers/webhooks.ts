@@ -16,63 +16,47 @@ export interface NationBuilderPerson {
   email: string;
   firstName: string;
   phone: string;
-  interests: Interests;
 }
 
 const router = express.Router();
-
-function getInterestCategoriesFromPayload(interests: Interests) {
-  const categories: string[] = [];
-  if (interests.water) {
-    categories.push('Water Organization');
-  }
-  if (interests.environmental) {
-    categories.push('Environmental Causes');
-  }
-  if (interests.people) {
-    categories.push('Social Justice and Recreation');
-  }
-  return categories;
-}
 
 router.post('/nationbuilder/personCreated', async function(req, res) {
   if (env.nationbuilderWebhookToken === req.body.token) {
     if (req.body.payload.person.is_volunteer) {
       const { email, first_name: firstName, phone, tags } = req.body.payload.person;
-      let interests = {
-        water: true,
-        environmental: true,
-        people: true,
-      };
-      if (!tags.includes('Action: Volunteer Yes: All activities')) {
-        interests = {
-          water: tags.includes('Action: Volunteer Yes: Water Organizations'),
-          environmental: tags.includes('Action: Volunteer Yes: Environmental'),
-          people: tags.includes('Action: Volunteer Yes: People Organizations'),
-        };
+      const allActivities = tags.includes('Action: Volunteer Yes: All activities');
+
+      // Find the mapping for these at: https://airtable.com/tblRHydYMl58f1rO8/viwTkGdSzyYX1i7Bn?blocks=hide
+      const interestCategories: string[] = [];
+      if (tags.includes('Action: Volunteer Yes: Water Organizations') || allActivities) {
+        interestCategories.push('Water Organizations');
+      }
+      if (tags.includes('Action: Volunteer Yes: Environmental') || allActivities) {
+        interestCategories.push('Environmental Causes');
+      }
+      if (tags.includes('Action: Volunteer Yes: People Organizations') || allActivities) {
+        interestCategories.push('Social Justice and Recreation');
       }
 
       const nationBuilderPerson: NationBuilderPerson = {
         email,
         firstName,
         phone,
-        interests,
       };
 
-      const interestCategories = getInterestCategoriesFromPayload(interests);
       const filters: AirTableFilters = {
-        interestCategories: interestCategories,
-        riverSections: [],
+        interestCategories,
       };
-
+      console.log(interestCategories);
       const listOfOrganizations = await airtableApiClient.getOrganizations(filters);
+      console.log('organizatoins:', listOfOrganizations);
       const senderEmailAddress = 'yac6791@gmail.com'; // TODO: ask RiverLA about sender email address
       const recipientEmailAddress = 'yac6791@gmail.com'; // nationBuilderPerson.email
       const emailSubject = 'Test email'; // TODO: ask RiverLA about subject of email sent
 
       const dynamicTemplateData: DynamicTemplateData = {
         name: nationBuilderPerson.firstName,
-        interests: interestCategories.map(category => ({ name: category.toLowerCase() })),
+        interests: interestCategories.map(category => category.toLowerCase()),
         organizations: listOfOrganizations.map(org => ({
           name: org.name,
           website: org.url,

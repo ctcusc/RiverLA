@@ -32,7 +32,8 @@ class SendGridApiClient {
     templateId: string,
     dynamicTemplateData: DynamicTemplateData,
   ) {
-    const enableSandbox = env.nodeEnv === 'development';
+    // const enableSandbox = env.nodeEnv === 'development';
+    const enableSandbox = false;
 
     sgMail.setApiKey(this.apiKey);
     const mailData: MailData = {

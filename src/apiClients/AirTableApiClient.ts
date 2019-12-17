@@ -60,7 +60,6 @@ class AirTableApiClient {
     const organizationRecords = await this.base(BASE_NAMES.ORGANIZATIONS)
       .select({ view: 'Grid view' })
       .all();
-
     let organizations: Organization[] = organizationRecords
       .filter((record?: Record) => record !== undefined)
       .map(recordToOrganization);
@@ -75,7 +74,6 @@ class AirTableApiClient {
         return interestCategories.some(category => organization.interestCategories.includes(category));
       });
     }
-
     return organizations;
   }
 }
