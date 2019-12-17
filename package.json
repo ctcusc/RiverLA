@@ -15,6 +15,7 @@
     "dev": "concurrently -k -p \"[{name}]\" -n \"TypeScript,Node\" -c \"cyan.bold,green.bold\" \"npm run watch-ts\" \"npm run watch-node\"",
     "test": "tsc && ava",
     "test-coverage": "tsc && nyc ava",
+    "validate-coverage": "nyc --check-coverage npm test",
     "watch-node": "nodemon -r dotenv/config dist/index.js",
     "watch-ts": "tsc -w"
   },
@@ -34,6 +35,8 @@
     "@types/express": "^4.17.1",
     "@types/helmet": "0.0.44",
     "@types/morgan": "^1.7.37",
+    "@types/phone-formatter": "0.0.2",
+    "@types/supertest": "^2.0.8",
     "@typescript-eslint/eslint-plugin": "^2.3.1",
     "@typescript-eslint/parser": "^2.3.1",
     "ava": "^2.4.0",
@@ -51,6 +54,7 @@
     "prettier": "^1.18.2",
     "pretty-quick": "^2.0.0",
     "sinon": "^7.5.0",
+    "supertest": "^4.0.2",
     "ts-node": "^8.4.1",
     "typescript": "^3.6.3"
   },
@@ -66,7 +70,6 @@
     "morgan": "^1.9.1",
     "ngrok": "^3.2.5",
     "phone-formatter": "0.0.2",
-    "sinon": "^7.5.0",
     "superagent": "^5.1.0"
   },
   "ava": {
@@ -91,6 +94,10 @@
     "extends": "@istanbuljs/nyc-config-typescript",
     "all": true,
     "check-coverage": true,
+    "branches": 90,
+    "lines": 85,
+    "functions": 90,
+    "statements": 85,
     "include": [
       "src/**/*.ts"
     ]

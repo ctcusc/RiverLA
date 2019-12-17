@@ -1,3 +1,4 @@
+/* istanbul ignore file */
 import express, { NextFunction, Request, Response } from 'express';
 import { HttpException } from './errors';
 import bodyParser from 'body-parser';

@@ -1,3 +1,4 @@
+/* istanbul ignore file */
 import { AirTableFilters } from '../apiClients/AirTableApiClient';
 import { DynamicTemplateData } from '../apiClients/SendGridApiClient';
 import apiClients from '../apiClients';
@@ -11,7 +12,7 @@ interface Interests {
   people: boolean;
 }
 
-interface NationBuilderPerson {
+export interface NationBuilderPerson {
   email: string;
   firstName: string;
   phone: string;
@@ -35,67 +36,66 @@ function getInterestCategoriesFromPayload(interests: Interests) {
 }
 
 router.post('/nationbuilder/personCreated', async function(req, res) {
-  const { email, first_name: firstName, phone, tags } = req.body.payload.person;
-  let interests = {
-    water: true,
-    environmental: true,
-    people: true,
-  };
-  if (!tags.includes('Action: Volunteer Yes: All activities')) {
-    interests = {
-      water: tags.includes('Action: Volunteer Yes: Water Organizations'),
-      environmental: tags.includes('Action: Volunteer Yes: Environmental'),
-      people: tags.includes('Action: Volunteer Yes: People Organizations'),
-    };
+  if (env.nationbuilderWebhookToken === req.body.token) {
+    if (req.body.payload.person.is_volunteer) {
+      const { email, first_name: firstName, phone, tags } = req.body.payload.person;
+      let interests = {
+        water: true,
+        environmental: true,
+        people: true,
+      };
+      if (!tags.includes('Action: Volunteer Yes: All activities')) {
+        interests = {
+          water: tags.includes('Action: Volunteer Yes: Water Organizations'),
+          environmental: tags.includes('Action: Volunteer Yes: Environmental'),
+          people: tags.includes('Action: Volunteer Yes: People Organizations'),
+        };
+      }
+
+      const nationBuilderPerson: NationBuilderPerson = {
+        email,
+        firstName,
+        phone,
+        interests,
+      };
+
+      const interestCategories = getInterestCategoriesFromPayload(interests);
+      const filters: AirTableFilters = {
+        interestCategories: interestCategories,
+        riverSections: [],
+      };
+
+      const listOfOrganizations = await airtableApiClient.getOrganizations(filters);
+      const senderEmailAddress = 'yac6791@gmail.com'; // TODO: ask RiverLA about sender email address
+      const recipientEmailAddress = 'yac6791@gmail.com'; // nationBuilderPerson.email
+      const emailSubject = 'Test email'; // TODO: ask RiverLA about subject of email sent
+
+      const dynamicTemplateData: DynamicTemplateData = {
+        name: nationBuilderPerson.firstName,
+        interests: interestCategories.map(category => ({ name: category.toLowerCase() })),
+        organizations: listOfOrganizations.map(org => ({
+          name: org.name,
+          website: org.url,
+          email: org.email,
+          phoneNumber: org.phoneNumber,
+        })),
+      };
+
+      const sgRes = await sendgridApiClient.sendEmail(
+        senderEmailAddress,
+        recipientEmailAddress,
+        emailSubject,
+        env.riverLATemplateID,
+        dynamicTemplateData,
+      );
+
+      res.send(sgRes);
+    }
+
+    return res.sendStatus(200);
   }
 
-  const nationBuilderPerson: NationBuilderPerson = {
-    email,
-    firstName,
-    phone,
-    interests,
-  };
-
-  const interestCategories = getInterestCategoriesFromPayload(interests);
-  const filters: AirTableFilters = {
-    interestCategories: interestCategories,
-    riverSections: [],
-  };
-
-  const listOfOrganizations = await airtableApiClient.getOrganizations(filters);
-  const senderEmailAddress = 'yac6791@gmail.com'; // TODO: ask RiverLA about sender email address
-  const recipientEmailAddress = 'yac6791@gmail.com'; // nationBuilderPerson.email
-  const emailSubject = 'Test email'; // TODO: ask RiverLA about subject of email sent
-
-  const dynamicTemplateData: DynamicTemplateData = {
-    name: nationBuilderPerson.firstName,
-    interests: [],
-    organizations: [],
-  };
-
-  for (const interest of interestCategories) {
-    dynamicTemplateData.interests.push({
-      name: interest.toLowerCase(),
-    });
-  }
-
-  for (const organization of listOfOrganizations) {
-    dynamicTemplateData.organizations.push({
-      name: organization.name,
-      website: organization.url,
-      email: organization.email,
-      phoneNumber: organization.phoneNumber,
-    });
-  }
-
-  const sgRes = await sendgridApiClient.sendEmail(
-    senderEmailAddress,
-    recipientEmailAddress,
-    emailSubject,
-    env.riverLATemplateID,
-    dynamicTemplateData,
-  );
-  res.send(sgRes);
+  return res.sendStatus(404);
 });
 
 export default router;

@@ -1,3 +1,4 @@
+/* istanbul ignore file */
 // Import modules
 import { DynamicTemplateData } from './apiClients/SendGridApiClient';
 import apiClients from './apiClients';

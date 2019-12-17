@@ -1,3 +1,4 @@
+/* istanbul ignore file */
 import { InvalidParametersError } from './errors';
 
 type TNodeEnv = 'development' | 'staging' | 'production' | 'test';
@@ -13,6 +14,7 @@ interface Environment {
   };
   airtableBaseId: string;
   riverLATemplateID: string;
+  nationbuilderWebhookToken: string;
 }
 
 function getInteger(variableName: string, defaultValue?: number): number {
@@ -60,11 +62,12 @@ const env: Environment = {
     airtable: getString('AIRTABLE_API_KEY'),
     sendgrid: getString('SENDGRID_API_KEY'),
   },
+  nationbuilderWebhookToken: getString('NATIONBUILDER_WEBHOOK_TOKEN'),
   nodeEnv: getEnvironment(),
+  riverLATemplateID: getString('RIVERLA_TEMPLATE_ID'),
   server: {
     port: getInteger('PORT', 80),
   },
-  riverLATemplateID: getString('RIVERLA_TEMPLATE_ID'),
 };
 
 export default env;
