@@ -31,6 +31,9 @@ class SendGridApiClient {
     templateId: string,
     dynamicTemplateData: DynamicTemplateData,
   ) {
+    // const enableSandbox = env.nodeEnv === 'development';
+    const enableSandbox = false;
+
     sgMail.setApiKey(this.apiKey);
     const mailData: MailData = {
       to: recipientEmailAddress,
@@ -38,14 +41,14 @@ class SendGridApiClient {
       subject: emailSubject,
       mailSettings: {
         sandboxMode: {
-          // enable: env.nodeEnv === 'development',
-          enable: true,
+          enable: enableSandbox,
         },
       },
       templateId: templateId,
       dynamicTemplateData: dynamicTemplateData,
     };
     const [sgResponse] = await sgMail.send([mailData]);
+
     return sgResponse;
   }
 }

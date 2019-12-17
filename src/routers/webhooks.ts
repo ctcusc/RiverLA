@@ -1,9 +1,9 @@
+import { AirTableFilters } from '../apiClients/AirTableApiClient';
+import { DynamicTemplateData } from '../apiClients/SendGridApiClient';
 import apiClients from '../apiClients';
 import env from '../env';
 import express from 'express';
 const { airtableApiClient, sendgridApiClient } = apiClients;
-import { AirTableFilters } from '../apiClients/AirTableApiClient';
-import { DynamicTemplateData } from '../apiClients/SendGridApiClient';
 
 interface Interests {
   water: boolean;
@@ -21,7 +21,7 @@ interface NationBuilderPerson {
 const router = express.Router();
 
 function getInterestCategoriesFromPayload(interests: Interests) {
-  let categories = [];
+  const categories: string[] = [];
   if (interests.water) {
     categories.push('Water Organization');
   }
@@ -72,13 +72,14 @@ router.post('/nationbuilder/personCreated', async function(req, res) {
     interests: [],
     organizations: [],
   };
-  for (let interest of interestCategories) {
+
+  for (const interest of interestCategories) {
     dynamicTemplateData.interests.push({
       name: interest.toLowerCase(),
     });
   }
 
-  for (let organization of listOfOrganizations) {
+  for (const organization of listOfOrganizations) {
     dynamicTemplateData.organizations.push({
       name: organization.name,
       website: organization.url,
