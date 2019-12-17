@@ -1,9 +1,9 @@
 import apiClients from '../apiClients';
+import env from '../env';
 import express from 'express';
 const { airtableApiClient, sendgridApiClient } = apiClients;
 import { AirTableFilters } from '../apiClients/AirTableApiClient';
 import { DynamicTemplateData } from '../apiClients/SendGridApiClient';
-import env from '../env';
 
 interface Interests {
   water: boolean;

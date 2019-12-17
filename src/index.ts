@@ -4,10 +4,40 @@ import app from './app';
 import colors from 'colors/safe';
 import env from './env';
 import ngrok from 'ngrok';
+import { DynamicTemplateData } from './apiClients/SendGridApiClient';
 
-app.listen(env.server.port, () => {
+app.listen(env.server.port, async () => {
+  const dynamicTemplateData: DynamicTemplateData = {
+    name: "Yash",
+    interests: [
+      {
+        name: "first interest"
+      },
+      {
+        name: "second interest"
+      },
+      {
+        name: "third interest"
+      },
+    ],
+    organizations: [
+      {
+        name: "name of org 1",
+        website: "org1.com",
+        email: "org1@gmail.com",
+        phoneNumber: "1233333333",
+      },
+    ]
+  };
+
   console.log(apiClients.airtableApiClient);
-  console.log(apiClients.sendgridApiClient);
+  try {
+    await apiClients.sendgridApiClient.sendEmail("yac6791@gmail.com", "yac6791@gmail.com", "Subject", env.riverLATemplateID, dynamicTemplateData);
+    console.log("got here")
+  }
+  catch(err) {
+    console.log(err);
+  }
   console.log(`🚀 App listening on port ${env.server.port}!`);
 });
 
