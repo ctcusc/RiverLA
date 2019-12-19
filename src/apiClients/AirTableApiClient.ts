@@ -95,22 +95,19 @@ class AirTableApiClient {
         await this.base('Errors').create([error]);
 
         const allRecords = await this.base('Errors')
-          .select({
-            view: 'Grid view',
-            maxRecords: 100,
-          })
+          .select({ view: 'Grid view' })
           .all();
 
         if (allRecords.length > MAXERRORLENGTH) {
           let deleteSet: string[] = [];
           for (let i = 0; i < 10; i++) {
-            deleteSet.push(allRecords[i].getId());
+            deleteSet.push(allRecords[i].id);
           }
           await this.base('Errors').destroy(deleteSet);
 
           deleteSet = [];
           for (let i = 10; i < 20; i++) {
-            deleteSet.push(allRecords[i].getId());
+            deleteSet.push(allRecords[i].id);
           }
           await this.base('Errors').destroy(deleteSet);
         }
