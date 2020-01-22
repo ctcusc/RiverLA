@@ -1,4 +1,4 @@
-import AirTableLogger from '../../src/apiClients/airtableLogger';
+import AirTableLogger from '../../src/apiClients/AirTableLogger';
 import { ErrorObject } from '../../src/apiClients/AirTableApiClient';
 import apiClients from '../../src/apiClients/index';
 import env from '../../src/env';
