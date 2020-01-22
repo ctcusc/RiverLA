@@ -56,6 +56,7 @@ function recordToOrganization(record: Record): Organization {
 
 const BASE_NAMES = {
   ORGANIZATIONS: 'Organizations',
+  ERRORS: 'Errors',
 };
 
 class AirTableApiClient {
@@ -92,9 +93,9 @@ class AirTableApiClient {
   async logError(error: ErrorObject): Promise<boolean> {
     const promise: Promise<boolean> = new Promise(async resolve => {
       try {
-        await this.base('Errors').create([error]);
+        await this.base(BASE_NAMES.ERRORS).create([error]);
 
-        const allRecords = await this.base('Errors')
+        const allRecords = await this.base(BASE_NAMES.ERRORS)
           .select({ view: 'Grid view' })
           .all();
 
@@ -103,13 +104,13 @@ class AirTableApiClient {
           for (let i = 0; i < 10; i++) {
             deleteSet.push(allRecords[i].id);
           }
-          await this.base('Errors').destroy(deleteSet);
+          await this.base(BASE_NAMES.ERRORS).destroy(deleteSet);
 
           deleteSet = [];
           for (let i = 10; i < 20; i++) {
             deleteSet.push(allRecords[i].id);
           }
-          await this.base('Errors').destroy(deleteSet);
+          await this.base(BASE_NAMES.ERRORS).destroy(deleteSet);
         }
       } catch (e) {
         console.log('Failed to log message.');
