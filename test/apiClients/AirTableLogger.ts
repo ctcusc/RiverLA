@@ -2,7 +2,6 @@ import AirTableLogger from '../../src/apiClients/AirTableLogger';
 import { ErrorObject } from '../../src/apiClients/AirTableApiClient';
 import apiClients from '../../src/apiClients/index';
 import env from '../../src/env';
-//import nock from 'nock';
 import sinon from 'sinon';
 import test from 'ava';
 
