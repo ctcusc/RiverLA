@@ -1,6 +1,7 @@
 const request = require('superagent');
 const colors = require('colors/safe');
 const readline = require('readline');
+require('dotenv').config();
 
 const rl = readline.createInterface({
   input: process.stdin,
@@ -10,7 +11,7 @@ const rl = readline.createInterface({
 rl.question('Enter an email the volunteer signup confirmation can be sent to: ', email => {
   request
     .post('https://www.riverla.org/forms/volunteer_signups')
-    .field('authenticity_token', 'ujtb7eSAzNCwgayjaHQYHnlFRkayjLmg9NzHEKkoyaw=')
+    .field('authenticity_token', process.env.NATIONBUILDER_WEBHOOK_TOKEN)
     .field('page_id', '1864')
     .field('return_to', 'https://www.riverla.org/volunteer')
     .field('email_address', '')
