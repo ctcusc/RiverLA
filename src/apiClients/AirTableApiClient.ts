@@ -100,16 +100,10 @@ class AirTableApiClient {
           .all();
 
         if (allRecords.length > MAXERRORLENGTH) {
-          let deleteSet: string[] = [];
-          for (let i = 0; i < 10; i++) {
-            deleteSet.push(allRecords[i].id);
-          }
+          let deleteSet = allRecords.slice(0, 10).map((record: { id: string }) => record.id);
           await this.base(BASE_NAMES.ERRORS).destroy(deleteSet);
 
-          deleteSet = [];
-          for (let i = 10; i < 20; i++) {
-            deleteSet.push(allRecords[i].id);
-          }
+          deleteSet = allRecords.slice(10, 20).map((record: { id: string }) => record.id);
           await this.base(BASE_NAMES.ERRORS).destroy(deleteSet);
         }
       } catch (e) {

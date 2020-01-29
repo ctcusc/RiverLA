@@ -6,6 +6,10 @@ import nock from 'nock';
 import sinon from 'sinon';
 import test from 'ava';
 
+/*Using the function from the AirTable code base that they use to 
+convert objects to QueryStrings for post requests (to use with nock). 
+It doesn't get recognized as an import since its type is any but a require 
+allows the function to be used.*/
 // eslint-disable-next-line
 const objectToQueryParamString = require('airtable/lib/object_to_query_param_string.js');
 
@@ -93,7 +97,7 @@ const org3: Organization = {
   interestCategories: ['Social Justice and Recreation'],
 };
 
-const shortRecords = [{ id: 'id' }, { id: 'id' }, { id: 'id' }, { id: 'id' }, { id: 'id' }];
+const shortRecords = [{ id: 'id1' }, { id: 'id2' }, { id: 'id3' }, { id: 'id4' }, { id: 'id5' }];
 
 const errorObject: ErrorObject = {
   fields: {
