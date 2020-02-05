@@ -1,4 +1,5 @@
 import Airtable from 'airtable';
+import CachedItem from '../utils/CachedItem';
 import env from '../env';
 
 const MAXERRORLENGTH = 100;
@@ -27,30 +28,29 @@ export interface ErrorObject {
   };
 }
 
-type TFieldName =
-  | 'Name'
-  | 'Description'
-  | 'Activity'
-  | 'Interest Categories'
-  | 'River Section'
-  | 'Phone Number'
-  | 'URL'
-  | 'Email';
-
 interface Record {
-  get: (fieldName: TFieldName) => string | string[];
+  fields: {
+    ['Name']: string;
+    ['Description']: string;
+    ['Activity']: string;
+    ['Interest Categories']: string[];
+    ['River Section']: string;
+    ['Phone Number']: string;
+    ['URL']: string;
+    ['Email']: string;
+  };
 }
 
 function recordToOrganization(record: Record): Organization {
   return {
-    name: record.get('Name') as string,
-    description: record.get('Description') as string,
-    activity: record.get('Activity') as string,
-    interestCategories: record.get('Interest Categories') as string[],
-    riverSection: record.get('River Section') as string,
-    phoneNumber: record.get('Phone Number') as string,
-    url: record.get('URL') as string,
-    email: record.get('Email') as string,
+    name: record.fields['Name'],
+    description: record.fields['Description'],
+    activity: record.fields['Activity'],
+    interestCategories: record.fields['Interest Categories'],
+    riverSection: record.fields['River Section'],
+    phoneNumber: record.fields['Phone Number'],
+    url: record.fields['URL'],
+    email: record.fields['Email'],
   };
 }
 
@@ -61,20 +61,25 @@ const BASE_NAMES = {
 
 class AirTableApiClient {
   private base: any;
+  private cachedOrganizations: CachedItem<Organization[]>;
 
   constructor() {
     this.base = new Airtable().base(env.airtableBaseId);
+    this.cachedOrganizations = new CachedItem<Organization[]>(1000);
   }
 
   async getOrganizations(filters: AirTableFilters = {}): Promise<Organization[]> {
     const { interestCategories, riverSections } = filters;
-    const organizationRecords = await this.base(BASE_NAMES.ORGANIZATIONS)
-      .select({ view: 'Grid view' })
-      .all();
+    let organizations = this.cachedOrganizations.get();
+    if (organizations === null) {
+      const organizationRecords: Record[] = await this.base(BASE_NAMES.ORGANIZATIONS)
+        .select({ view: 'Grid view' })
+        .all();
 
-    let organizations: Organization[] = organizationRecords
-      .filter((record?: Record) => record !== undefined)
-      .map(recordToOrganization);
+      organizations = organizationRecords.filter((record?: Record) => record !== undefined).map(recordToOrganization);
+
+      this.cachedOrganizations.set(organizations);
+    }
 
     if (riverSections !== undefined) {
       organizations = organizations.filter(organization => {

@@ -113,7 +113,16 @@ for (let i = 0; i < 101; i++) {
   longRecords.push({ id: `fakeId${i}` });
 }
 
-test('Returns one page of results properly', async t => {
+test.beforeEach(() => {
+  nock.disableNetConnect();
+});
+
+test.afterEach(() => {
+  nock.cleanAll();
+  nock.enableNetConnect();
+});
+
+test.serial('Returns one page of results properly', async t => {
   const airtableApiClient: AirTableApiClient = new AirTableApiClient();
 
   nock(AIRTABLE_API_URL)
@@ -128,7 +137,7 @@ test('Returns one page of results properly', async t => {
   t.deepEqual(organizations, answer);
 });
 
-test('Returns one page of filtered river results properly', async t => {
+test.serial('Returns one page of filtered river results properly', async t => {
   const airtableApiClient: AirTableApiClient = new AirTableApiClient();
 
   nock(AIRTABLE_API_URL)
@@ -147,7 +156,7 @@ test('Returns one page of filtered river results properly', async t => {
   t.deepEqual(organizations, answer);
 });
 
-test('Returns one page of filtered interest categories results properly', async t => {
+test.serial('Returns one page of filtered interest categories results properly', async t => {
   const airtableApiClient: AirTableApiClient = new AirTableApiClient();
 
   nock(AIRTABLE_API_URL)
@@ -186,7 +195,7 @@ test.serial('Returns one page of filtered both empty results properly', async t 
   t.deepEqual(organizations, answer);
 });
 
-test('Returns one page of filtered both results properly', async t => {
+test.serial('Returns one page of filtered both results properly', async t => {
   const airtableApiClient: AirTableApiClient = new AirTableApiClient();
 
   nock(AIRTABLE_API_URL)
@@ -206,7 +215,7 @@ test('Returns one page of filtered both results properly', async t => {
   t.deepEqual(organizations, answer);
 });
 
-test('Returns one page of filtered two interest categories results properly', async t => {
+test.serial('Returns one page of filtered two interest categories results properly', async t => {
   const airtableApiClient: AirTableApiClient = new AirTableApiClient();
 
   nock(AIRTABLE_API_URL)
@@ -225,7 +234,7 @@ test('Returns one page of filtered two interest categories results properly', as
   t.deepEqual(organizations, answer);
 });
 
-test('Returns one page of filtered two river results properly', async t => {
+test.serial('Returns one page of filtered two river results properly', async t => {
   const airtableApiClient: AirTableApiClient = new AirTableApiClient();
 
   nock(AIRTABLE_API_URL)
@@ -244,7 +253,84 @@ test('Returns one page of filtered two river results properly', async t => {
   t.deepEqual(organizations, answer);
 });
 
-test('Promise resolves true when api calls are successful', async t => {
+test.serial('Request to Airtable url made when cache is set to null by constructor', async t => {
+  const airtableApiClient: AirTableApiClient = new AirTableApiClient();
+
+  nock(AIRTABLE_API_URL)
+    .get('/Organizations')
+    .query({ view: 'Grid view' })
+    .reply(200, {
+      records,
+    });
+
+  const organizations: Organization[] = await airtableApiClient.getOrganizations();
+  const answer: Organization[] = [org1, org2, org3];
+  t.deepEqual(organizations, answer);
+});
+
+test.serial('Request to Airtable url not made when cache stores contents', async t => {
+  const airtableApiClient: AirTableApiClient = new AirTableApiClient();
+
+  nock(AIRTABLE_API_URL)
+    .get('/Organizations')
+    .query({ view: 'Grid view' })
+    .reply(200, {
+      records,
+    });
+
+  let organizations: Organization[] = await airtableApiClient.getOrganizations();
+
+  nock(AIRTABLE_API_URL)
+    .get('/Organizations')
+    .query({ view: 'Grid view' })
+    .reply(200, {
+      org1,
+    });
+
+  organizations = await airtableApiClient.getOrganizations();
+  const cache: Organization[] = [org1, org2, org3];
+  t.deepEqual(organizations, cache);
+});
+
+test.serial('Request to AirTable url made when ttl milliseconds passed', async t => {
+  const airtableApiClient: AirTableApiClient = new AirTableApiClient();
+  const fakeTimer: sinon.SinonFakeTimers = sinon.useFakeTimers();
+
+  nock(AIRTABLE_API_URL)
+    .get('/Organizations')
+    .query({ view: 'Grid view' })
+    .reply(200, {
+      records,
+    });
+
+  let organizations: Organization[] = await airtableApiClient.getOrganizations();
+  fakeTimer.tick(1000);
+
+  nock(AIRTABLE_API_URL)
+    .get('/Organizations')
+    .query({ view: 'Grid view' })
+    .reply(200, {
+      records: [records[0]],
+    });
+
+  organizations = await airtableApiClient.getOrganizations();
+  const organization = {
+    name: 'Chrysalis Enterprises',
+    riverSection: 'Upper',
+    activity: 'Needs Volunteers',
+    description:
+      'Chrysalis is a nonprofit organization dedicated to creating a pathway to self-sufficiency for homeless and low-income individuals by providing the res...',
+    email: 'fakeemail@chrysalis.org',
+    phoneNumber: '(123) 456-7890',
+    url: 'https://changelives.org/',
+    interestCategories: ['Water Organizations'],
+  };
+  const answer: Organization[] = [organization];
+  fakeTimer.restore();
+  t.deepEqual(organizations, answer);
+});
+
+test.serial('Promise resolves true when api calls are successful', async t => {
   const airtableApiClient: AirTableApiClient = new AirTableApiClient();
 
   nock(AIRTABLE_API_URL)
@@ -262,7 +348,8 @@ test('Promise resolves true when api calls are successful', async t => {
 
   t.true(await airtableApiClient.logError(errorObject));
 });
-test('Checks Airtable clears 20 entries when Airtable is full (over 100 entries)', async t => {
+
+test.serial('Checks Airtable clears 20 entries when Airtable is full (over 100 entries)', async t => {
   const airtableApiClient: AirTableApiClient = new AirTableApiClient();
 
   const createCall = nock(AIRTABLE_API_URL)
