@@ -19,6 +19,7 @@ We highly recommend using [Visual Studio Code](https://code.visualstudio.com/) f
 - [Peidi Xie](https://github.com/cx1802)
 - [Quinn Ngo](https://github.com/quinnngo)
 - [Stacy Phan](https://github.com/stacyvp)
+- [Teresa Liu](https://github.com/teresaliu20)
 - [Yash Chandak](https://github.com/yash-chandak)
 
 ## Running the app
