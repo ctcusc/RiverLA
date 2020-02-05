@@ -1,7 +1,17 @@
 import AirTableApiClient, { AirTableFilters, Organization } from '../../src/apiClients/AirTableApiClient';
+
+import { ErrorObject } from '../../src/apiClients/AirTableApiClient';
 import env from '../../src/env';
 import nock from 'nock';
+import sinon from 'sinon';
 import test from 'ava';
+
+/*Using the function from the AirTable code base that they use to 
+convert objects to QueryStrings for post requests (to use with nock). 
+It doesn't get recognized as an import since its type is any but a require 
+allows the function to be used.*/
+// eslint-disable-next-line
+const objectToQueryParamString = require('airtable/lib/object_to_query_param_string.js');
 
 const AIRTABLE_API_URL = `https://api.airtable.com/v0/${env.airtableBaseId}`;
 
@@ -86,6 +96,22 @@ const org3: Organization = {
   url: 'https://changelives.org/',
   interestCategories: ['Social Justice and Recreation'],
 };
+
+const shortRecords = [{ id: 'id1' }, { id: 'id2' }, { id: 'id3' }, { id: 'id4' }, { id: 'id5' }];
+
+const errorObject: ErrorObject = {
+  fields: {
+    Name: 'My error name',
+    Message: 'Testing message',
+    Status: '404',
+    Organization: ['rec8bi23a15qZt29b'],
+  },
+};
+
+const longRecords: ({ id: string })[] = [];
+for (let i = 0; i < 101; i++) {
+  longRecords.push({ id: `fakeId${i}` });
+}
 
 test('Returns one page of results properly', async t => {
   const airtableApiClient: AirTableApiClient = new AirTableApiClient();
@@ -216,4 +242,90 @@ test('Returns one page of filtered two river results properly', async t => {
   const organizations: Organization[] = await airtableApiClient.getOrganizations(airTableFilters);
   const answer: Organization[] = [org2, org3];
   t.deepEqual(organizations, answer);
+});
+
+test('Promise resolves true when api calls are successful', async t => {
+  const airtableApiClient: AirTableApiClient = new AirTableApiClient();
+
+  nock(AIRTABLE_API_URL)
+    .post('/Errors/?')
+    .reply(200, {
+      records: shortRecords,
+    });
+
+  nock(AIRTABLE_API_URL)
+    .get('/Errors')
+    .query({ view: 'Grid view' })
+    .reply(200, {
+      records: shortRecords,
+    });
+
+  t.true(await airtableApiClient.logError(errorObject));
+});
+test('Checks Airtable clears 20 entries when Airtable is full (over 100 entries)', async t => {
+  const airtableApiClient: AirTableApiClient = new AirTableApiClient();
+
+  const createCall = nock(AIRTABLE_API_URL)
+    .post('/Errors/?')
+    .reply(200, {
+      records: longRecords,
+    });
+
+  const getErrorsCall = nock(AIRTABLE_API_URL)
+    .get('/Errors')
+    .query({ view: 'Grid view' })
+    .reply(200, {
+      records: longRecords,
+    });
+
+  let recordsToDelete: (string)[] = [];
+  for (let i = 0; i < 10; i++) {
+    recordsToDelete.push(`fakeId${i}`);
+  }
+
+  /* Using Airtable's function to construct the query string. Will fail if
+	the function becomes deprecated */
+  const firstDeleteErrorsCall = nock(AIRTABLE_API_URL)
+    .delete('/Errors?' + objectToQueryParamString({ records: recordsToDelete }))
+    .reply(200, {
+      records: shortRecords,
+    });
+
+  recordsToDelete = [];
+  for (let i = 10; i < 20; i++) {
+    recordsToDelete.push(`fakeId${i}`);
+  }
+
+  const secondDeleteErrorsCall = nock(AIRTABLE_API_URL)
+    .delete('/Errors?' + objectToQueryParamString({ records: recordsToDelete }))
+    .reply(200, {
+      records: shortRecords,
+    });
+
+  t.false(createCall.isDone());
+  t.false(getErrorsCall.isDone());
+  t.false(firstDeleteErrorsCall.isDone());
+  t.false(secondDeleteErrorsCall.isDone());
+
+  t.true(await airtableApiClient.logError(errorObject));
+  t.true(createCall.isDone());
+  t.true(getErrorsCall.isDone());
+  t.true(firstDeleteErrorsCall.isDone());
+  t.true(secondDeleteErrorsCall.isDone());
+});
+
+test.serial('Promise resolves false when API call is unsuccessful', async t => {
+  const airtableApiClient: AirTableApiClient = new AirTableApiClient();
+
+  //prevent function from logging error to console for ava
+  const consoleStub = sinon.stub(console, 'log');
+
+  nock(AIRTABLE_API_URL)
+    .post('/Errors/?')
+    .reply(400, {
+      records: longRecords,
+    });
+
+  t.false(await airtableApiClient.logError(errorObject));
+  consoleStub.restore();
 });
