@@ -1,5 +1,6 @@
 // When adding to this file, refer to
 // https://developer.here.com/documentation/traffic/topics/http-status-codes.html for status codes
+/* istanbul ignore file */
 
 type ErrorName = 'InvalidParametersError' | 'CustomError';
 

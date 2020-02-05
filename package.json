@@ -14,7 +14,9 @@
     "start": "node ./dist/index.js",
     "dev": "concurrently -k -p \"[{name}]\" -n \"TypeScript,Node\" -c \"cyan.bold,green.bold\" \"npm run watch-ts\" \"npm run watch-node\"",
     "test": "tsc && ava",
+    "test-integration": "node test_integration/integrationTest.js --experimental-modules",
     "test-coverage": "tsc && nyc ava",
+    "validate-coverage": "nyc --check-coverage npm test",
     "watch-node": "nodemon -r dotenv/config dist/index.js",
     "watch-ts": "tsc -w"
   },
@@ -34,6 +36,7 @@
     "@types/express": "^4.17.1",
     "@types/helmet": "0.0.44",
     "@types/morgan": "^1.7.37",
+    "@types/supertest": "^2.0.8",
     "@typescript-eslint/eslint-plugin": "^2.3.1",
     "@typescript-eslint/parser": "^2.3.1",
     "ava": "^2.4.0",
@@ -51,22 +54,24 @@
     "prettier": "^1.18.2",
     "pretty-quick": "^2.0.0",
     "sinon": "^7.5.0",
+    "supertest": "^4.0.2",
     "ts-node": "^8.4.1",
     "typescript": "^3.6.3"
   },
   "dependencies": {
+    "@sendgrid/mail": "^6.4.0",
     "@types/airtable": "^0.5.6",
     "@types/sinon": "^7.5.0",
     "airtable": "^0.7.2",
-    "@sendgrid/mail": "^6.4.0",
     "body-parser": "^1.19.0",
     "colors": "^1.4.0",
     "express": "^4.17.1",
     "helmet": "^3.21.1",
     "morgan": "^1.9.1",
     "ngrok": "^3.2.5",
+    "readline": "^1.3.0",
     "sinon": "^7.5.0",
-    "superagent": "^5.1.0"
+    "superagent": "^5.1.2"
   },
   "ava": {
     "compileEnhancements": false,
@@ -90,6 +95,10 @@
     "extends": "@istanbuljs/nyc-config-typescript",
     "all": true,
     "check-coverage": true,
+    "branches": 90,
+    "lines": 85,
+    "functions": 90,
+    "statements": 85,
     "include": [
       "src/**/*.ts"
     ]

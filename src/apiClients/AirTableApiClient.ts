@@ -2,6 +2,7 @@ import Airtable from 'airtable';
 import CachedItem from '../utils/CachedItem';
 import env from '../env';
 
+const MAXERRORLENGTH = 100;
 export interface AirTableFilters {
   interestCategories?: string[];
   riverSections?: string[];
@@ -16,6 +17,15 @@ export interface Organization {
   phoneNumber: string;
   url: string;
   email: string;
+}
+
+export interface ErrorObject {
+  fields: {
+    Name?: string;
+    Message?: string;
+    Status?: string;
+    Organization?: [string];
+  };
 }
 
 interface Record {
@@ -46,6 +56,7 @@ function recordToOrganization(record: Record): Organization {
 
 const BASE_NAMES = {
   ORGANIZATIONS: 'Organizations',
+  ERRORS: 'Errors',
 };
 
 class AirTableApiClient {
@@ -82,6 +93,32 @@ class AirTableApiClient {
     }
 
     return organizations;
+  }
+
+  async logError(error: ErrorObject): Promise<boolean> {
+    const promise: Promise<boolean> = new Promise(async resolve => {
+      try {
+        await this.base(BASE_NAMES.ERRORS).create([error]);
+
+        const allRecords = await this.base(BASE_NAMES.ERRORS)
+          .select({ view: 'Grid view' })
+          .all();
+
+        if (allRecords.length > MAXERRORLENGTH) {
+          let deleteSet = allRecords.slice(0, 10).map((record: { id: string }) => record.id);
+          await this.base(BASE_NAMES.ERRORS).destroy(deleteSet);
+
+          deleteSet = allRecords.slice(10, 20).map((record: { id: string }) => record.id);
+          await this.base(BASE_NAMES.ERRORS).destroy(deleteSet);
+        }
+      } catch (e) {
+        console.log('Failed to log message.');
+        console.log(e);
+        resolve(false);
+      }
+      resolve(true);
+    });
+    return promise;
   }
 }
 
