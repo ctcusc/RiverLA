@@ -18,16 +18,12 @@ We highly recommend using [Visual Studio Code](https://code.visualstudio.com/) f
 - [Olivia Hong](https://github.com/olivia-hong)
 - [Peidi Xie](https://github.com/cx1802)
 - [Quinn Ngo](https://github.com/quinnngo)
-- Stacy Phan
+- [Stacy Phan](https://github.com/stacyvp)
 - [Yash Chandak](https://github.com/yash-chandak)
 
 ## Running the app
 
 In order to run the app in a local environment, run `npm run dev`.
-
-### Running the app on Windows
-
-To run the app in a local environment on Windows, you need to run on Git Bash. You should run `npm run dev-windows`.
 
 ## Useful Links
 
