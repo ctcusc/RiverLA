@@ -1,5 +1,4 @@
 /* istanbul ignore file */
-// Import modules
 import app from './app';
 import colors from 'colors/safe';
 import env from './env';

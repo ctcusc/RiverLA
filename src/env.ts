@@ -49,6 +49,7 @@ function getString(variableName: string, defaultValue?: string): string {
 
 function getEnvironment(): TNodeEnv {
   const val = process.env.NODE_ENV;
+  console.log('*** ' + process.env.NODE_ENV + ' ' + val);
   if (val === 'test' || val === 'production' || val === 'staging' || val === 'development') {
     return val;
   }
