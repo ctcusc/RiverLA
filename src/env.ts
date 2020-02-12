@@ -14,7 +14,7 @@ interface Environment {
   airtableBaseId: string;
 }
 
-function getInteger(val: string | undefined, variableName: string, defaultValue?: number): number {
+export function getInteger(val: string | undefined, variableName: string, defaultValue?: number): number {
   if (val === undefined) {
     if (defaultValue === undefined) {
       throw new InvalidParametersError(`Required environment variable ${variableName} is undefined`);
@@ -31,7 +31,7 @@ function getInteger(val: string | undefined, variableName: string, defaultValue?
   return ret;
 }
 
-function getString(val: string | undefined, variableName: string, defaultValue?: string): string {
+export function getString(val: string | undefined, variableName: string, defaultValue?: string): string {
   if (val === undefined || val === '') {
     if (defaultValue === undefined) {
       throw new InvalidParametersError(`Required environment variable ${variableName} is undefined`);
@@ -42,7 +42,7 @@ function getString(val: string | undefined, variableName: string, defaultValue?:
   return val;
 }
 
-function getEnvironment(val: string | undefined): TNodeEnv {
+export function getEnvironment(val: string | undefined): TNodeEnv {
   if (val === 'test' || val === 'production' || val === 'staging' || val === 'development') {
     return val;
   }
