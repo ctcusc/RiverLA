@@ -48,6 +48,7 @@ test.serial('resolves to true when sgMail.send is successful', async t => {
   const sendgridResult: [Response, {}] = [{} as Response, {}];
   sendgridStub.resolves(sendgridResult);
   sinon.stub(env, 'nodeEnv').value('development');
+  sinon.stub(env, 'riverLATemplateID').value('1234');
 
   const result = await sendgridApiClient.sendEmail(fromEmail, toEmail, subject, templateId, data);
   t.is(result, sendgridResult[0]);
