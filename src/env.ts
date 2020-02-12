@@ -13,6 +13,7 @@ interface Environment {
     port: number;
   };
   airtableBaseId: string;
+  riverLATemplateID: string;
   nationbuilderWebhookToken: string;
 }
 
@@ -64,6 +65,7 @@ const env: Environment = {
   server: {
     port: getInteger('PORT', 80),
   },
+  riverLATemplateID: getString('RIVERLA_TEMPLATE_ID'),
   airtableBaseId: getString('AIRTABLE_BASE_ID'),
   nationbuilderWebhookToken: getString('NATIONBUILDER_WEBHOOK_TOKEN'),
 };

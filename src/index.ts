@@ -1,13 +1,10 @@
 /* istanbul ignore file */
-import apiClients from './apiClients';
 import app from './app';
 import colors from 'colors/safe';
 import env from './env';
 import ngrok from 'ngrok';
 
-app.listen(env.server.port, () => {
-  console.log(apiClients.airtableApiClient);
-  console.log(apiClients.sendgridApiClient);
+app.listen(env.server.port, async () => {
   console.log(`🚀 App listening on port ${env.server.port}!`);
 });
 

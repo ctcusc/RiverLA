@@ -3,6 +3,17 @@ import { MailData } from '@sendgrid/helpers/classes/mail';
 import env from '../env';
 import sgMail from '@sendgrid/mail';
 
+export interface DynamicTemplateData {
+  name: string;
+  interests: string[];
+  organizations: {
+    name: string;
+    website: string;
+    email: string;
+    phoneNumber: string;
+  }[];
+}
+
 class SendGridApiClient {
   private apiKey: string;
 
@@ -13,20 +24,28 @@ class SendGridApiClient {
     this.apiKey = apiKey;
   }
 
-  async sendEmail(senderEmailAddress: string, recipientEmailAddress: string, emailBody: string, emailSubject: string) {
+  async sendEmail(
+    senderEmailAddress: string,
+    recipientEmailAddress: string,
+    emailSubject: string,
+    templateId: string,
+    dynamicTemplateData: DynamicTemplateData,
+  ) {
     sgMail.setApiKey(this.apiKey);
     const mailData: MailData = {
-      to: recipientEmailAddress,
       from: senderEmailAddress,
+      to: recipientEmailAddress,
       subject: emailSubject,
-      text: emailBody,
       mailSettings: {
         sandboxMode: {
           enable: env.nodeEnv === 'development',
         },
       },
+      templateId: templateId,
+      dynamicTemplateData: dynamicTemplateData,
     };
     const [sgResponse] = await sgMail.send([mailData]);
+
     return sgResponse;
   }
 }
