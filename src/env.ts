@@ -1,3 +1,4 @@
+/* istanbul ignore file */
 import { InvalidParametersError } from './errors';
 
 type TNodeEnv = 'development' | 'staging' | 'production' | 'test';
@@ -12,9 +13,13 @@ interface Environment {
     port: number;
   };
   airtableBaseId: string;
+  riverLATemplateID: string;
+  nationbuilderWebhookToken: string;
 }
 
-export function getInteger(val: string | undefined, variableName: string, defaultValue?: number): number {
+
+export function getInteger(variableName: string, defaultValue?: number): number {
+  const val = process.env[variableName];
   if (val === undefined) {
     if (defaultValue === undefined) {
       throw new InvalidParametersError(`Required environment variable ${variableName} is undefined`);
@@ -31,7 +36,8 @@ export function getInteger(val: string | undefined, variableName: string, defaul
   return ret;
 }
 
-export function getString(val: string | undefined, variableName: string, defaultValue?: string): string {
+export function getString(variableName: string, defaultValue?: string): string {
+  const val = process.env[variableName];
   if (val === undefined || val === '') {
     if (defaultValue === undefined) {
       throw new InvalidParametersError(`Required environment variable ${variableName} is undefined`);
@@ -42,7 +48,9 @@ export function getString(val: string | undefined, variableName: string, default
   return val;
 }
 
-export function getEnvironment(val: string | undefined): TNodeEnv {
+
+eport function getEnvironment(): TNodeEnv {
+  const val = process.env.NODE_ENV;
   if (val === 'test' || val === 'production' || val === 'staging' || val === 'development') {
     return val;
   }
@@ -51,15 +59,17 @@ export function getEnvironment(val: string | undefined): TNodeEnv {
 }
 
 const env: Environment = {
-  airtableBaseId: getString(process.env.AIRTABLE_BASE_ID, 'AIRTABLE_BASE_ID'),
   apiKeys: {
-    airtable: getString(process.env.AIRTABLE_API_KEY, 'AIRTABLE_API_KEY'),
-    sendgrid: getString(process.env.SENDGRID_API_KEY, 'SENDGRID_API_KEY'),
+    airtable: getString('AIRTABLE_API_KEY'),
+    sendgrid: getString('SENDGRID_API_KEY'),
   },
-  nodeEnv: getEnvironment(process.env.NODE_ENV),
+  nodeEnv: getEnvironment(),
   server: {
-    port: getInteger(process.env.PORT, 'PORT', 80),
+    port: getInteger('PORT', 80),
   },
+  riverLATemplateID: getString('RIVERLA_TEMPLATE_ID'),
+  airtableBaseId: getString('AIRTABLE_BASE_ID'),
+  nationbuilderWebhookToken: getString('NATIONBUILDER_WEBHOOK_TOKEN'),
 };
 
 export default env;

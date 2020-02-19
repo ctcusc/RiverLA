@@ -9,4 +9,4 @@
 ## PR Checklist
 
 - [ ] Wrote ava tests
-- [ ] Reviewed by **all** @ctcusc/RiverLA team members
+- [ ] Reviewed by **the tech lead and at least 2 other** @ctcusc/RiverLA team members
