@@ -15,6 +15,7 @@ const objectToQueryParamString = require('airtable/lib/object_to_query_param_str
 
 const AIRTABLE_API_URL = `https://api.airtable.com/v0/${env.airtableBaseId}`;
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 const records: any = [
   {
     id: 'abc123',

@@ -60,6 +60,7 @@ const BASE_NAMES = {
 };
 
 class AirTableApiClient {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   private base: any;
   private cachedOrganizations: CachedItem<Organization[]>;
 

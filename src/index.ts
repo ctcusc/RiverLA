@@ -3,7 +3,6 @@ import app from './app';
 import colors from 'colors/safe';
 import env from './env';
 import ngrok from 'ngrok';
-//import AirTableApiClient from './apiClients/AirTableApiClient';
 
 app.listen(env.server.port, async () => {
   console.log(`🚀 App listening on port ${env.server.port}!`);
@@ -21,10 +20,3 @@ if (env.nodeEnv === 'development') {
     );
   })();
 }
-
-async function testFunction() {
-  const apiOrganizations = await apiClients.airtableApiClient.getOrganizations();
-  console.log(apiOrganizations);
-}
-
-testFunction();

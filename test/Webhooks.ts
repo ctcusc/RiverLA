@@ -20,6 +20,7 @@ let person = {
   is_volunteer: true,
 };
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 const user1: any = {
   nation_slug: 'larivercorp',
   payload: { person },
@@ -40,6 +41,7 @@ person = {
   is_volunteer: false,
 };
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 const user2: any = {
   nation_slug: 'larivercorp',
   payload: { person },
