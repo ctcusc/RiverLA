@@ -94,7 +94,7 @@ class AirTableApiClient {
    * Takes in optional filters to retrieve organizations with specific fields.
    *
    * @param filters - Object containing lists of options to filter by. If these lists are empty,
-   * no organizations will be filtered out. WIthin each list, organizations only need to satisfy at least one
+   * no organizations will be filtered out. Within each list, organizations only need to satisfy at least one
    * of the desired options. For example, if multiple interest categories are specified, an organization only needs
    * to match one of them to be returned. Between the lists, an organization must satsify at least one option from each.
    * Therefore, an organization would need to have at least one of the desired interest categories AND one of the desired river sections
