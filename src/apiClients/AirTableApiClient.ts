@@ -94,6 +94,17 @@ class AirTableApiClient {
 
     return organizations;
   }
+  /**
+   * Takes an error object and stores its information in AirTable.
+   * If the Errors table has more than 100 records, the oldest 20
+   * records are deleted. This function will not throw exceptions.
+   * If a problem occurrs in the function, the error will be logged
+   * to the console and the function will resolve to false.
+   *
+   * @param error - Error object containing data about an error
+   * @returns A promise to a boolean indicating if the error was
+   * logged successfully.
+   */
 
   async logError(error: ErrorObject): Promise<boolean> {
     const promise: Promise<boolean> = new Promise(async resolve => {
