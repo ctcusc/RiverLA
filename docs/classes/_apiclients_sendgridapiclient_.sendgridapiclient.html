@@ -69,13 +69,6 @@
     <div class="container container-main">
       <div class="row">
         <div class="col-8 col-content">
-          <section class="tsd-panel tsd-comment">
-            <div class="tsd-comment tsd-typography">
-              <div class="lead">
-                <p>The SendGridApiClient class does what and describe it here...</p>
-              </div>
-            </div>
-          </section>
           <section class="tsd-panel tsd-hierarchy">
             <h3>Hierarchy</h3>
             <ul class="tsd-hierarchy">
@@ -142,27 +135,17 @@
                     <ul>
                       <li>
                         Defined in
-                        <a href="https://github.com/ctcusc/RiverLA/blob/9714f35/src/apiClients/SendGridApiClient.ts#L10"
-                          >src/apiClients/SendGridApiClient.ts:10</a
+                        <a
+                          href="https://github.com/ctcusc/RiverLA/blob/7c7d1d0f/src/apiClients/SendGridApiClient.ts#L18"
+                          >src/apiClients/SendGridApiClient.ts:18</a
                         >
                       </li>
                     </ul>
                   </aside>
-                  <div class="tsd-comment tsd-typography">
-                    <div class="lead">
-                      <p>Creates a new SendGridApiClient instance</p>
-                    </div>
-                    <p>Insert description about what this function does here...</p>
-                  </div>
                   <h4 class="tsd-parameters-title">Parameters</h4>
                   <ul class="tsd-parameters">
                     <li>
                       <h5>apiKey: <span class="tsd-signature-type">string</span></h5>
-                      <div class="tsd-comment tsd-typography">
-                        <div class="lead">
-                          <p>Insert description about this param...</p>
-                        </div>
-                      </div>
                     </li>
                   </ul>
                   <h4 class="tsd-returns-title">
@@ -171,7 +154,6 @@
                       >SendGridApiClient</a
                     >
                   </h4>
-                  <p>Insert what this function returns here...</p>
                 </li>
               </ul>
             </section>
@@ -188,8 +170,8 @@
                 <ul>
                   <li>
                     Defined in
-                    <a href="https://github.com/ctcusc/RiverLA/blob/9714f35/src/apiClients/SendGridApiClient.ts#L10"
-                      >src/apiClients/SendGridApiClient.ts:10</a
+                    <a href="https://github.com/ctcusc/RiverLA/blob/7c7d1d0f/src/apiClients/SendGridApiClient.ts#L18"
+                      >src/apiClients/SendGridApiClient.ts:18</a
                     >
                   </li>
                 </ul>
@@ -209,13 +191,18 @@
                   ><span class="tsd-signature-type">string</span>, recipientEmailAddress<span
                     class="tsd-signature-symbol"
                     >: </span
-                  ><span class="tsd-signature-type">string</span>, emailBody<span class="tsd-signature-symbol">: </span
                   ><span class="tsd-signature-type">string</span>, emailSubject<span class="tsd-signature-symbol"
                     >: </span
-                  ><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">)</span
-                  ><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Promise</span
-                  ><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">Response</span
-                  ><span class="tsd-signature-symbol">&gt;</span>
+                  ><span class="tsd-signature-type">string</span>, templateId<span class="tsd-signature-symbol">: </span
+                  ><span class="tsd-signature-type">string</span>, dynamicTemplateData<span class="tsd-signature-symbol"
+                    >: </span
+                  ><a
+                    href="../interfaces/_apiclients_sendgridapiclient_.dynamictemplatedata.html"
+                    class="tsd-signature-type"
+                    >DynamicTemplateData</a
+                  ><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span
+                  ><span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span
+                  ><span class="tsd-signature-type">Response</span><span class="tsd-signature-symbol">&gt;</span>
                 </li>
               </ul>
               <ul class="tsd-descriptions">
@@ -224,50 +211,42 @@
                     <ul>
                       <li>
                         Defined in
-                        <a href="https://github.com/ctcusc/RiverLA/blob/9714f35/src/apiClients/SendGridApiClient.ts#L38"
-                          >src/apiClients/SendGridApiClient.ts:38</a
+                        <a
+                          href="https://github.com/ctcusc/RiverLA/blob/7c7d1d0f/src/apiClients/SendGridApiClient.ts#L27"
+                          >src/apiClients/SendGridApiClient.ts:27</a
                         >
                       </li>
                     </ul>
                   </aside>
-                  <div class="tsd-comment tsd-typography">
-                    <div class="lead">
-                      <p>Send Email from SendGrid API Client</p>
-                    </div>
-                    <p>Insert description about what this function does here...</p>
-                  </div>
                   <h4 class="tsd-parameters-title">Parameters</h4>
                   <ul class="tsd-parameters">
                     <li>
                       <h5>senderEmailAddress: <span class="tsd-signature-type">string</span></h5>
-                      <div class="tsd-comment tsd-typography">
-                        <p>Insert description about this param...</p>
-                      </div>
                     </li>
                     <li>
                       <h5>recipientEmailAddress: <span class="tsd-signature-type">string</span></h5>
-                      <div class="tsd-comment tsd-typography">
-                        <p>Insert description about this param...</p>
-                      </div>
-                    </li>
-                    <li>
-                      <h5>emailBody: <span class="tsd-signature-type">string</span></h5>
-                      <div class="tsd-comment tsd-typography">
-                        <p>Insert description about this param...</p>
-                      </div>
                     </li>
                     <li>
                       <h5>emailSubject: <span class="tsd-signature-type">string</span></h5>
-                      <div class="tsd-comment tsd-typography">
-                        <p>Insert description about this param...</p>
-                      </div>
+                    </li>
+                    <li>
+                      <h5>templateId: <span class="tsd-signature-type">string</span></h5>
+                    </li>
+                    <li>
+                      <h5>
+                        dynamicTemplateData:
+                        <a
+                          href="../interfaces/_apiclients_sendgridapiclient_.dynamictemplatedata.html"
+                          class="tsd-signature-type"
+                          >DynamicTemplateData</a
+                        >
+                      </h5>
                     </li>
                   </ul>
                   <h4 class="tsd-returns-title">
                     Returns <span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span
                     ><span class="tsd-signature-type">Response</span><span class="tsd-signature-symbol">&gt;</span>
                   </h4>
-                  <p>Insert what this function returns here...</p>
                 </li>
               </ul>
             </section>
@@ -337,7 +316,13 @@
                 </ul>
               </li>
             </ul>
-            <ul class="after-current"></ul>
+            <ul class="after-current">
+              <li class=" tsd-kind-interface tsd-parent-kind-external-module">
+                <a href="../interfaces/_apiclients_sendgridapiclient_.dynamictemplatedata.html" class="tsd-kind-icon"
+                  >Dynamic<wbr />Template<wbr />Data</a
+                >
+              </li>
+            </ul>
           </nav>
         </div>
       </div>
