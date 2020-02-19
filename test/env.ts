@@ -1,4 +1,3 @@
-//the path of env and errors
 import { getEnvironment, getInteger, getString } from '../src/env';
 import { InvalidParametersError } from '../src/errors';
 import sinon from 'sinon';

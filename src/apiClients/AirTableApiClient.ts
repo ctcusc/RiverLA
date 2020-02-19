@@ -18,17 +18,6 @@ export interface Organization {
   url: string;
   email: string;
 }
-/**
-type TFieldName =
-  | 'Name'
-  | 'Description'
-  | 'Activity'
-  | 'Interest Categories'
-  | 'River Section'
-  | 'Phone Number'
-  | 'URL'
-  | 'Email';
-*/
 
 export interface ErrorObject {
   fields: {
