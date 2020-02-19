@@ -76,9 +76,7 @@ class AirTableApiClient {
       const organizationRecords: Record[] = await this.base(BASE_NAMES.ORGANIZATIONS)
         .select({ view: 'Grid view' })
         .all();
-
       organizations = organizationRecords.filter((record?: Record) => record !== undefined).map(recordToOrganization);
-
       this.cachedOrganizations.set(organizations);
     }
 
