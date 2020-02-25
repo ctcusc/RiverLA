@@ -12,9 +12,9 @@ import sgMail from '@sendgrid/mail';
 /**
  * Interface to hold all data necessary for an email.
  *
- * @param name the name of the user.
- * @param interests a list of all the interests the user selected when applying.
- * @param organizations a list of all the organizations that matched the user's interests.
+ * @param name - The name of the user.
+ * @param interests - A list of all the interests the user selected when applying.
+ * @param organizations - A list of all the organizations that matched the user's interests.
  * For each organization there is the organization's name, website URL, email, and phone number.
  */
 export interface DynamicTemplateData {
@@ -37,7 +37,7 @@ class SendGridApiClient {
   /**
    * Creates a new SendGrid API Client instance.
    *
-   * @param apiKey Refers to the API key for accessing SendGrid.
+   * @param apiKey - Refers to the API key for accessing SendGrid.
    */
   constructor(apiKey: string) {
     if (apiKey === '') {
@@ -49,11 +49,11 @@ class SendGridApiClient {
   /**
    * Send Email from SendGrid API Client
    *
-   * @param senderEmailAddress The email address to be sent from.
-   * @param recipientEmailAddress The email address being sent to.
-   * @param emailSubject The subject line of the email.
-   * @param templateId Refers to the template ID number in SendGrid for the specific email template.
-   * @param dynamicTemplateData The [[DynamicTemplateData]] object that contains all of the unqiue information
+   * @param senderEmailAddress - The email address to be sent from.
+   * @param recipientEmailAddress - The email address being sent to.
+   * @param emailSubject - The subject line of the email.
+   * @param templateId - Refers to the template ID number in SendGrid for the specific email template.
+   * @param dynamicTemplateData - The [[DynamicTemplateData]] object that contains all of the unqiue information
    * for this email.
    * @returns a promise to a response object indicating whether the email was sent.
    */
