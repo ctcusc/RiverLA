@@ -41,11 +41,9 @@ router.post('/nationbuilder/personCreated', async function(req, res) {
       const filters: AirTableFilters = {
         interestCategories,
       };
-      console.log(interestCategories);
       const listOfOrganizations = await airtableApiClient.getOrganizations(filters);
-      console.log('organizatoins:', listOfOrganizations);
       const senderEmailAddress = 'yac6791@gmail.com'; // TODO: ask RiverLA about sender email address
-      const recipientEmailAddress = 'yac6791@gmail.com'; // nationBuilderPerson.email
+      const recipientEmailAddress = email; // nationBuilderPerson.email
       const emailSubject = 'Test email'; // TODO: ask RiverLA about subject of email sent
 
       const dynamicTemplateData: DynamicTemplateData = {
@@ -59,21 +57,33 @@ router.post('/nationbuilder/personCreated', async function(req, res) {
         })),
       };
 
-      const sgRes = await sendgridApiClient.sendEmail(
-        senderEmailAddress,
-        recipientEmailAddress,
-        emailSubject,
-        env.riverLATemplateID,
-        dynamicTemplateData,
-      );
-
-      res.send(sgRes);
+      try {
+        const sgRes = await sendgridApiClient.sendEmail(
+          senderEmailAddress,
+          recipientEmailAddress,
+          emailSubject,
+          env.riverLATemplateID,
+          dynamicTemplateData,
+        );
+        return res.send(sgRes);
+      } catch (error) {
+        res.status(500);
+        return res.send({
+          error: error,
+        });
+      }
+    } else {
+      res.status(500);
+      return res.send({
+        error: 'person is not volunteer',
+      });
     }
-
-    return res.sendStatus(200);
   }
 
-  return res.sendStatus(404);
+  res.status(500);
+  return res.send({
+    error: 'Token does not match',
+  });
 });
 
 export default router;
