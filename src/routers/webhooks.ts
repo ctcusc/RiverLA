@@ -6,12 +6,25 @@ import env from '../env';
 import express from 'express';
 const { airtableApiClient, sendgridApiClient } = apiClients;
 
+// Redundant interface with DynamicTemplateData. Will be removed in next PR (needed for current Webhooks tests)
+export interface NationBuilderPerson {
+  email: string;
+  firstName: string;
+  phone: string;
+}
+
 const router = express.Router();
 
 router.post('/nationbuilder/personCreated', async function(req, res) {
   if (env.nationbuilderWebhookToken === req.body.token) {
     if (req.body.payload.person.is_volunteer) {
-      const { email, first_name: firstName, tags } = req.body.payload.person;
+      const { email, first_name: firstName, phone, tags } = req.body.payload.person;
+      const nationBuilderPerson: NationBuilderPerson = {
+        // More redundancies
+        email,
+        firstName,
+        phone,
+      };
       const allActivities = tags.includes('Action: Volunteer Yes: All activities');
 
       // Find the mapping for these at: https://airtable.com/tblRHydYMl58f1rO8/viwTkGdSzyYX1i7Bn?blocks=hide
@@ -35,7 +48,7 @@ router.post('/nationbuilder/personCreated', async function(req, res) {
       const emailSubject = 'Test email'; // TODO: ask RiverLA about subject of email sent
 
       const dynamicTemplateData: DynamicTemplateData = {
-        name: firstName,
+        name: nationBuilderPerson.firstName, // More redundancies
         interests: interestCategories.map(category => category.toLowerCase()),
         organizations: listOfOrganizations.map(org => ({
           name: org.name,
