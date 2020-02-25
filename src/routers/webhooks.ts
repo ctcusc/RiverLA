@@ -6,18 +6,12 @@ import env from '../env';
 import express from 'express';
 const { airtableApiClient, sendgridApiClient } = apiClients;
 
-export interface NationBuilderPerson {
-  email: string;
-  firstName: string;
-  phone: string;
-}
-
 const router = express.Router();
 
 router.post('/nationbuilder/personCreated', async function(req, res) {
   if (env.nationbuilderWebhookToken === req.body.token) {
     if (req.body.payload.person.is_volunteer) {
-      const { email, first_name: firstName, phone, tags } = req.body.payload.person;
+      const { email, first_name: firstName, tags } = req.body.payload.person;
       const allActivities = tags.includes('Action: Volunteer Yes: All activities');
 
       // Find the mapping for these at: https://airtable.com/tblRHydYMl58f1rO8/viwTkGdSzyYX1i7Bn?blocks=hide
@@ -32,22 +26,16 @@ router.post('/nationbuilder/personCreated', async function(req, res) {
         interestCategories.push('Social Justice and Recreation');
       }
 
-      const nationBuilderPerson: NationBuilderPerson = {
-        email,
-        firstName,
-        phone,
-      };
-
       const filters: AirTableFilters = {
         interestCategories,
       };
       const listOfOrganizations = await airtableApiClient.getOrganizations(filters);
       const senderEmailAddress = 'yac6791@gmail.com'; // TODO: ask RiverLA about sender email address
-      const recipientEmailAddress = email; // nationBuilderPerson.email
+      const recipientEmailAddress = email;
       const emailSubject = 'Test email'; // TODO: ask RiverLA about subject of email sent
 
       const dynamicTemplateData: DynamicTemplateData = {
-        name: nationBuilderPerson.firstName,
+        name: firstName,
         interests: interestCategories.map(category => category.toLowerCase()),
         organizations: listOfOrganizations.map(org => ({
           name: org.name,
