@@ -98,7 +98,7 @@ class AirTableApiClient {
    * Takes an error object and stores its information in AirTable.
    * If the Errors table has more than MAXERRORLENGTH records, the oldest 20
    * records are deleted. This function will not throw exceptions.
-   * If a problem occurrs in the function, the error will be logged
+   * If a problem occurs in the function, the error will be logged
    * to the console and the function will resolve to false.
    *
    * @param error - Error object containing data about an error
