@@ -52,12 +52,12 @@ test.afterEach.always(() => {
   sinon.restore();
 });
 
-test.serial('404 error', async t => {
+test.serial('500: internal server error', async t => {
   sinon.stub(env, 'nationbuilderWebhookToken').value(webtoken2);
   const res = await request(app)
     .post('/webhooks/nationbuilder/personCreated')
     .send(user2);
-  t.is(res.status, 404);
+  t.is(res.status, 500);
 });
 
 test.serial('testing is_volunteer true', async t => {
@@ -75,5 +75,5 @@ test.serial('testing is_volunteer false', async t => {
   const res = await request(app)
     .post('/webhooks/nationbuilder/personCreated')
     .send(user2);
-  t.is(res.status, 200);
+  t.is(res.status, 400);
 });

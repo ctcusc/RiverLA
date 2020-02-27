@@ -7,6 +7,7 @@ export interface DynamicTemplateData {
   name: string;
   interests: string[];
   organizations: {
+    // TODO: consider making these parameters optional and doing logic to fill it in
     name: string;
     website: string;
     email: string;

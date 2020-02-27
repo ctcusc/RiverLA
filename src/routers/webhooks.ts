@@ -1,4 +1,7 @@
 /* istanbul ignore file */
+/**
+ * Uses Express to respond to all client POST requests.
+ */
 import { AirTableFilters } from '../apiClients/AirTableApiClient';
 import { DynamicTemplateData } from '../apiClients/SendGridApiClient';
 import apiClients from '../apiClients';
@@ -15,12 +18,22 @@ export interface NationBuilderPerson {
 
 const router = express.Router();
 
+/**
+ * Main function to handle client requests. Works by checking to see if the payload is valid,
+ * grabbing the necessary parameters from the payload, parsing the interest categories, using the
+ * [[AirTableFilters]] class to get the list of matched organizations, and then uses the [[SendGridApiClient]]
+ * class to send a properly formatted email with this information.
+ *
+ * @param req - A Request object that contains the payload sent by the client.
+ * @param res - A Response object that returns to the client the HTTP status code and any error message pertaining to the request.
+ * @returns A Promise to resolve sending the appropriate response message.
+ */
 router.post('/nationbuilder/personCreated', async function(req, res) {
   if (env.nationbuilderWebhookToken === req.body.token) {
     if (req.body.payload.person.is_volunteer) {
       const { email, first_name: firstName, phone, tags } = req.body.payload.person;
+      // More redundancies
       const nationBuilderPerson: NationBuilderPerson = {
-        // More redundancies
         email,
         firstName,
         phone,
@@ -43,9 +56,9 @@ router.post('/nationbuilder/personCreated', async function(req, res) {
         interestCategories,
       };
       const listOfOrganizations = await airtableApiClient.getOrganizations(filters);
-      const senderEmailAddress = 'yac6791@gmail.com'; // TODO: ask RiverLA about sender email address
+      const senderEmailAddress = 'info@riverla.org';
       const recipientEmailAddress = email;
-      const emailSubject = 'Test email'; // TODO: ask RiverLA about subject of email sent
+      const emailSubject = 'RiverLA has found you a volunteering match!';
 
       const dynamicTemplateData: DynamicTemplateData = {
         name: nationBuilderPerson.firstName, // More redundancies
@@ -74,16 +87,16 @@ router.post('/nationbuilder/personCreated', async function(req, res) {
         });
       }
     } else {
-      res.status(500);
+      res.status(400);
       return res.send({
-        error: 'person is not volunteer',
+        error: 'The person is not a volunteer',
       });
     }
   }
 
-  res.status(500);
+  res.status(400);
   return res.send({
-    error: 'Token does not match',
+    error: 'The NationBuilder token does not match',
   });
 });
 
