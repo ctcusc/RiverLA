@@ -17,7 +17,7 @@ interface Environment {
   nationbuilderWebhookToken: string;
 }
 
-function getInteger(variableName: string, defaultValue?: number): number {
+export function getInteger(variableName: string, defaultValue?: number): number {
   const val = process.env[variableName];
   if (val === undefined) {
     if (defaultValue === undefined) {
@@ -35,7 +35,7 @@ function getInteger(variableName: string, defaultValue?: number): number {
   return ret;
 }
 
-function getString(variableName: string, defaultValue?: string): string {
+export function getString(variableName: string, defaultValue?: string): string {
   const val = process.env[variableName];
   if (val === undefined || val === '') {
     if (defaultValue === undefined) {
@@ -47,7 +47,7 @@ function getString(variableName: string, defaultValue?: string): string {
   return val;
 }
 
-function getEnvironment(): TNodeEnv {
+export function getEnvironment(): TNodeEnv {
   const val = process.env.NODE_ENV;
   if (val === 'test' || val === 'production' || val === 'staging' || val === 'development') {
     return val;
