@@ -80,7 +80,6 @@ test.serial('testing is_volunteer true', async t => {
   t.is(res.status, 200);
   t.deepEqual(res.body, result1);
 });
-
 test.serial('testing is_volunteer false', async t => {
   sinon.stub(env, 'nationbuilderWebhookToken').value(webtoken1);
   const res = await request(app)
