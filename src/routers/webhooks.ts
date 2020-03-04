@@ -43,6 +43,9 @@ router.post('/nationbuilder/personCreated', async function(req, res) {
         interestCategories,
       };
       const listOfOrganizations = await airtableApiClient.getOrganizations(filters);
+
+      console.log(listOfOrganizations);
+
       const senderEmailAddress = 'info@riverla.org';
       const recipientEmailAddress = email;
       const emailSubject = 'RiverLA has found you a volunteering match!';

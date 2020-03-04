@@ -7,7 +7,7 @@ import request from 'supertest';
 import sinon from 'sinon';
 import test from 'ava';
 
-const { sendgridApiClient } = apiClients;
+const { sendgridApiClient, airtableApiClient } = apiClients;
 
 const webtoken1 = 'abc';
 const webtoken2 = 'def';
@@ -30,17 +30,19 @@ const user1: any = {
   version: 4,
 };
 
+const organizations = [
+  {
+    name: 'org1',
+    website: 'www.org1.com',
+    email: 'org1@org1.com',
+    phoneNumber: '1234567890',
+  },
+];
+
 const result1: DynamicTemplateData = {
   name: 'person1',
   interests: [],
-  organizations: [
-    {
-      name: 'org1',
-      website: 'www.org1.com',
-      email: 'org1@org1.com',
-      phoneNumber: '1234567890',
-    },
-  ],
+  organizations: organizations,
 };
 
 person = {
@@ -74,12 +76,14 @@ test.serial('testing is_volunteer true', async t => {
   sinon.stub(env, 'nationbuilderWebhookToken').value(webtoken1);
   t.log(process.env.NATIONBUILDER_WEBHOOK_TOKEN);
   sendgridApiClient.sendEmail = sinon.stub().returns(result1);
+  airtableApiClient.getOrganizations = sinon.stub().returns(organizations);
   const res = await request(app)
     .post('/webhooks/nationbuilder/personCreated')
     .send(user1);
   t.is(res.status, 200);
   t.deepEqual(res.body, result1);
 });
+
 test.serial('testing is_volunteer false', async t => {
   sinon.stub(env, 'nationbuilderWebhookToken').value(webtoken1);
   const res = await request(app)
