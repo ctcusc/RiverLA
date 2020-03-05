@@ -38,9 +38,5 @@ dist/**/*
 # Ignore nyc output
 .nyc_output
 
-<<<<<<< HEAD
 # Ignore docs output
-=======
-# Ignore doxs
->>>>>>> ignore docs
 docs/*

@@ -1,4 +1,3 @@
-/* istanbul ignore file */
 import env from '../env';
 import express from 'express';
 
