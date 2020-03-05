@@ -1,5 +1,4 @@
 import AirTableApiClient, { AirTableFilters, Organization } from '../../src/apiClients/AirTableApiClient';
-
 import { ErrorObject } from '../../src/apiClients/AirTableApiClient';
 import env from '../../src/env';
 import nock from 'nock';
