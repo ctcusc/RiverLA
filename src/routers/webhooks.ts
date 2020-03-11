@@ -1,4 +1,3 @@
-/* istanbul ignore file */
 /**
  * Uses Express to respond to all client POST requests.
  */

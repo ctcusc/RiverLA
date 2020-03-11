@@ -16,6 +16,7 @@ app.use(bodyParser.urlencoded());
 app.use('/webhooks', webhookRouter);
 
 // error handler
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 app.use((err: HttpException, req: Request, res: Response, next: NextFunction) => {
   res.status(err.code).json(err);
 });

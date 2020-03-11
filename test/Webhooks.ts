@@ -23,6 +23,7 @@ let person = {
   tags: ['Action: Volunteer Yes: Water Organizations'],
 };
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 const user1: any = {
   nation_slug: 'larivercorp',
   payload: { person },
@@ -50,6 +51,7 @@ person = {
   tags: ['Action: Volunteer Yes: Water Organizations'],
 };
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 const user2: any = {
   nation_slug: 'larivercorp',
   payload: { person },
