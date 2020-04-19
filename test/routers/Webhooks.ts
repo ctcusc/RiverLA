@@ -1,7 +1,7 @@
-import { DynamicTemplateData } from '../src/apiClients/SendGridApiClient';
-import apiClients from '../src/apiClients';
-import app from '../src/app';
-import env from '../src/env';
+import { DynamicTemplateData } from '../../src/apiClients/SendGridApiClient';
+import apiClients from '../../src/apiClients';
+import app from '../../src/app';
+import env from '../../src/env';
 import express from 'express';
 import request from 'supertest';
 import sinon from 'sinon';
@@ -20,7 +20,7 @@ let person = {
   email: 'person1@gmail.com',
   first_name: 'person1',
   is_volunteer: true,
-  tags: ['Action: Volunteer Yes: Water Organizations'],
+  tags: ['Action: Volunteer Yes: Environmental'],
 };
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -48,7 +48,7 @@ person = {
   email: 'person2@gmail.com',
   first_name: 'person2',
   is_volunteer: false,
-  tags: ['Action: Volunteer Yes: Water Organizations'],
+  tags: ['Action: Volunteer Yes: Environmental'],
 };
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
