@@ -35,19 +35,6 @@ const user1: any = {
   version: 4,
 };
 
-const result1: DynamicTemplateData = {
-  name: 'person1',
-  interests: [],
-  organizations: [
-    {
-      name: 'org1',
-      website: 'www.org1.com',
-      email: 'org1@org1.com',
-      phoneNumber: '1234567890',
-    },
-  ],
-};
-
 person = {
   email: 'person2@gmail.com',
   first_name: 'person2',
@@ -76,6 +63,19 @@ const user3: any = {
   payload: { person },
   token: webtoken1,
   version: 4,
+};
+
+const result1: DynamicTemplateData = {
+  name: 'person1',
+  interests: [],
+  organizations: [
+    {
+      name: 'org1',
+      website: 'www.org1.com',
+      email: 'org1@org1.com',
+      phoneNumber: '1234567890',
+    },
+  ],
 };
 /* eslint-enable @typescript-eslint/camelcase */
 
@@ -112,6 +112,18 @@ test.serial('testing is_volunteer false', async t => {
 });
 
 test.serial('testing empty tags', async t => {
+  sinon.stub(env, 'nationbuilderWebhookToken').value(webtoken1);
+  t.log(process.env.NATIONBUILDER_WEBHOOK_TOKEN);
+  sendgridApiClient.sendEmail = sinon.stub().returns(result1);
+  airtableApiClient.getOrganizations = sinon.stub().returns(result1.organizations);
+  const res = await request(app)
+    .post('/webhooks/nationbuilder/personCreated')
+    .send(user3);
+  t.is(res.status, 200);
+  t.deepEqual(res.body, result1);
+});
+
+test.serial('testing sendEmail error', async t => {
   sinon.stub(env, 'nationbuilderWebhookToken').value(webtoken1);
   t.log(process.env.NATIONBUILDER_WEBHOOK_TOKEN);
   sendgridApiClient.sendEmail = sinon.stub().returns(result1);
