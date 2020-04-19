@@ -62,6 +62,21 @@ const user2: any = {
   token: webtoken1,
   version: 4,
 };
+
+person = {
+  email: 'person1@gmail.com',
+  first_name: 'person1',
+  is_volunteer: true,
+  tags: [],
+};
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+const user3: any = {
+  nation_slug: 'larivercorp',
+  payload: { person },
+  token: webtoken1,
+  version: 4,
+};
 /* eslint-enable @typescript-eslint/camelcase */
 
 test.afterEach.always(() => {
@@ -94,4 +109,16 @@ test.serial('testing is_volunteer false', async t => {
     .post('/webhooks/nationbuilder/personCreated')
     .send(user2);
   t.is(res.status, 400);
+});
+
+test.serial('testing empty tags', async t => {
+  sinon.stub(env, 'nationbuilderWebhookToken').value(webtoken1);
+  t.log(process.env.NATIONBUILDER_WEBHOOK_TOKEN);
+  sendgridApiClient.sendEmail = sinon.stub().returns(result1);
+  airtableApiClient.getOrganizations = sinon.stub().returns(result1.organizations);
+  const res = await request(app)
+    .post('/webhooks/nationbuilder/personCreated')
+    .send(user3);
+  t.is(res.status, 200);
+  t.deepEqual(res.body, result1);
 });
