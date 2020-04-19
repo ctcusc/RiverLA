@@ -20,7 +20,7 @@ let person = {
   email: 'person1@gmail.com',
   first_name: 'person1',
   is_volunteer: true,
-  tags: ['Action: Volunteer Yes: Environmental'],
+  tags: ['Action: Volunteer Yes: People Organizations'],
 };
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -48,7 +48,7 @@ person = {
   email: 'person2@gmail.com',
   first_name: 'person2',
   is_volunteer: false,
-  tags: ['Action: Volunteer Yes: Environmental'],
+  tags: ['Action: Volunteer Yes: Water Organizations', 'Action: Volunteer Yes: Environmental'],
 };
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
