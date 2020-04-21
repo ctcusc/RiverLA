@@ -122,15 +122,3 @@ test.serial('testing empty tags', async t => {
   t.is(res.status, 200);
   t.deepEqual(res.body, result1);
 });
-
-test.serial('testing sendEmail error', async t => {
-  sinon.stub(env, 'nationbuilderWebhookToken').value(webtoken1);
-  t.log(process.env.NATIONBUILDER_WEBHOOK_TOKEN);
-  sendgridApiClient.sendEmail = sinon.stub().returns(result1);
-  airtableApiClient.getOrganizations = sinon.stub().returns(result1.organizations);
-  const res = await request(app)
-    .post('/webhooks/nationbuilder/personCreated')
-    .send(user3);
-  t.is(res.status, 200);
-  t.deepEqual(res.body, result1);
-});
