@@ -25,44 +25,42 @@ const router = express.Router();
 router.post('/nationbuilder/personCreated', async function(req, res) {
   if (env.nationbuilderWebhookToken === req.body.token) {
     if (req.body.payload.person.is_volunteer) {
-      console.log('Start--------------------------------');
       setTimeout(async () => {
-        console.log('End---------------------------------');
-        const personId = req.body.payload.person.id;
-        const { email, first_name: firstName, tags } = await getPerson(personId);
-        const allActivities = tags.includes('Action: Volunteer Yes: All activities');
-
-        // Find the mapping for these at: https://airtable.com/tblRHydYMl58f1rO8/viwTkGdSzyYX1i7Bn?blocks=hide
-        const interestCategories: string[] = [];
-        if (tags.includes('Action: Volunteer Yes: Water Organizations') || allActivities) {
-          interestCategories.push('Water Organizations');
-        }
-        if (tags.includes('Action: Volunteer Yes: Environmental') || allActivities) {
-          interestCategories.push('Environmental Causes');
-        }
-        if (tags.includes('Action: Volunteer Yes: People Organizations') || allActivities) {
-          interestCategories.push('Social Justice and Recreation');
-        }
-
-        const filters: AirTableFilters = {
-          interestCategories,
-        };
-        const listOfOrganizations = await airtableApiClient.getOrganizations(filters);
-        const senderEmailAddress = 'info@riverla.org';
-        const recipientEmailAddress = email;
-        const emailSubject = 'RiverLA has found you a volunteering match!';
-
-        const dynamicTemplateData: DynamicTemplateData = {
-          name: firstName,
-          interests: interestCategories.map(category => category.toLowerCase()),
-          organizations: listOfOrganizations.map(org => ({
-            name: org.name,
-            website: org.url,
-            email: org.email,
-            phoneNumber: org.phoneNumber,
-          })),
-        };
         try {
+          const personId = req.body.payload.person.id;
+          const { email, first_name: firstName, tags } = await getPerson(personId);
+          const allActivities = tags.includes('Action: Volunteer Yes: All activities');
+
+          // Find the mapping for these at: https://airtable.com/tblRHydYMl58f1rO8/viwTkGdSzyYX1i7Bn?blocks=hide
+          const interestCategories: string[] = [];
+          if (tags.includes('Action: Volunteer Yes: Water Organizations') || allActivities) {
+            interestCategories.push('Water Organizations');
+          }
+          if (tags.includes('Action: Volunteer Yes: Environmental') || allActivities) {
+            interestCategories.push('Environmental Causes');
+          }
+          if (tags.includes('Action: Volunteer Yes: People Organizations') || allActivities) {
+            interestCategories.push('Social Justice and Recreation');
+          }
+
+          const filters: AirTableFilters = {
+            interestCategories,
+          };
+          const listOfOrganizations = await airtableApiClient.getOrganizations(filters);
+          const senderEmailAddress = 'info@riverla.org';
+          const recipientEmailAddress = email;
+          const emailSubject = 'RiverLA has found you a volunteering match!';
+
+          const dynamicTemplateData: DynamicTemplateData = {
+            name: firstName,
+            interests: interestCategories.map(category => category.toLowerCase()),
+            organizations: listOfOrganizations.map(org => ({
+              name: org.name,
+              website: org.url,
+              email: org.email,
+              phoneNumber: org.phoneNumber,
+            })),
+          };
           await sendgridApiClient.sendEmail(
             senderEmailAddress,
             recipientEmailAddress,
@@ -70,22 +68,12 @@ router.post('/nationbuilder/personCreated', async function(req, res) {
             env.riverLATemplateID,
             dynamicTemplateData,
           );
-          // const sgRes = await sendgridApiClient.sendEmail(
-          //   senderEmailAddress,
-          //   recipientEmailAddress,
-          //   emailSubject,
-          //   env.riverLATemplateID,
-          //   dynamicTemplateData,
-          // );
-          //return res.send(sgRes);
         } catch (error) {
-          // res.status(500);
-          // return res.send({
-          //   error: error,
-          // });
           console.log(error);
         }
       }, 60000);
+      res.status(200);
+      return res.send('Success');
     } else {
       res.status(400);
       return res.send({

@@ -22,7 +22,6 @@ async function getPerson(personId: number) {
     return requestBody.person;
   } catch (error) {
     console.log(error);
-    console.log(error.message);
     return error;
   }
 }
