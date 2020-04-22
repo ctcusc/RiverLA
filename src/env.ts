@@ -7,6 +7,7 @@ interface Environment {
   apiKeys: {
     airtable: string;
     sendgrid: string;
+    nationbuilder: string;
   };
   server: {
     port: number;
@@ -59,6 +60,7 @@ const env: Environment = {
   apiKeys: {
     airtable: getString('AIRTABLE_API_KEY'),
     sendgrid: getString('SENDGRID_API_KEY'),
+    nationbuilder: getString('NATIONBUILDER_ACCESS_TOKEN'),
   },
   nodeEnv: getEnvironment(),
   server: {
