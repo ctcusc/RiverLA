@@ -1,7 +1,10 @@
 import env from '../../src/env';
 import getPerson from '../../src/apiClients/NationBuilderApiClient';
+import proxyquire from 'proxyquire';
 import sinon from 'sinon';
 import test from 'ava';
+
+const personId = 1234;
 
 /* eslint-disable @typescript-eslint/camelcase */
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -18,7 +21,12 @@ const person1 = {
 /* eslint-enable @typescript-eslint/camelcase */
 
 test.serial('Checks person object is returned', async t => {
-  sinon.stub(env, 'nationBuilderAccessToken').value('access_token');
-  const getPersonStub = sinon.stub(getPerson, 'getPerson').returns(person1);
-  t.deepEqual(getPersonStub.result, person1);
+  sinon.stub(env, 'nodeEnv').value('development');
+  sinon.stub(env.apiKeys, 'nationbuilder').value('access_token');
+  const getPersonStub = sinon.stub();
+  const getPersonModule = proxyquire(getPerson, {
+    './getPerson': getPersonStub,
+  });
+  const personReturned = getPersonModule(personId);
+  t.deepEqual(personReturned, person1);
 });
