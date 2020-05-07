@@ -1,6 +1,5 @@
 /**
  * Function to get a person's tags after they have been created.
- *
  */
 import { Request } from 'express';
 import env from '../env';
