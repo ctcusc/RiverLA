@@ -1,7 +1,7 @@
-import { DynamicTemplateData } from '../src/apiClients/SendGridApiClient';
-import apiClients from '../src/apiClients';
-import app from '../src/app';
-import env from '../src/env';
+import { DynamicTemplateData } from '../../src/apiClients/SendGridApiClient';
+import apiClients from '../../src/apiClients';
+import app from '../../src/app';
+import env from '../../src/env';
 import express from 'express';
 import request from 'supertest';
 import sinon from 'sinon';
@@ -20,11 +20,45 @@ let person = {
   email: 'person1@gmail.com',
   first_name: 'person1',
   is_volunteer: true,
-  tags: ['Action: Volunteer Yes: Water Organizations'],
+  tags: [
+    'Action: Volunteer Yes: Water Organizations',
+    'Action: Volunteer Yes: Environmental',
+    'Action: Volunteer Yes: People Organizations',
+  ],
 };
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const user1: any = {
+  nation_slug: 'larivercorp',
+  payload: { person },
+  token: webtoken1,
+  version: 4,
+};
+
+person = {
+  email: 'person2@gmail.com',
+  first_name: 'person2',
+  is_volunteer: false,
+  tags: ['Action: Volunteer Yes: Water Organizations'],
+};
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+const user2: any = {
+  nation_slug: 'larivercorp',
+  payload: { person },
+  token: webtoken1,
+  version: 4,
+};
+
+person = {
+  email: 'person1@gmail.com',
+  first_name: 'person1',
+  is_volunteer: true,
+  tags: [],
+};
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+const user3: any = {
   nation_slug: 'larivercorp',
   payload: { person },
   token: webtoken1,
@@ -42,21 +76,6 @@ const result1: DynamicTemplateData = {
       phoneNumber: '1234567890',
     },
   ],
-};
-
-person = {
-  email: 'person2@gmail.com',
-  first_name: 'person2',
-  is_volunteer: false,
-  tags: ['Action: Volunteer Yes: Water Organizations'],
-};
-
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-const user2: any = {
-  nation_slug: 'larivercorp',
-  payload: { person },
-  token: webtoken1,
-  version: 4,
 };
 /* eslint-enable @typescript-eslint/camelcase */
 
@@ -90,4 +109,16 @@ test.serial('testing is_volunteer false', async t => {
     .post('/webhooks/nationbuilder/personCreated')
     .send(user2);
   t.is(res.status, 400);
+});
+
+test.serial('testing empty tags', async t => {
+  sinon.stub(env, 'nationbuilderWebhookToken').value(webtoken1);
+  t.log(process.env.NATIONBUILDER_WEBHOOK_TOKEN);
+  sendgridApiClient.sendEmail = sinon.stub().returns(result1);
+  airtableApiClient.getOrganizations = sinon.stub().returns(result1.organizations);
+  const res = await request(app)
+    .post('/webhooks/nationbuilder/personCreated')
+    .send(user3);
+  t.is(res.status, 200);
+  t.deepEqual(res.body, result1);
 });
