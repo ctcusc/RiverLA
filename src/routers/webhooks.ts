@@ -23,9 +23,12 @@ const router = express.Router();
  */
 
 router.post('/nationbuilder/personCreated', async function(req, res) {
+  console.log('Recieved event in person created webhook, validating request...');
   if (env.nationbuilderWebhookToken === req.body.token) {
     if (req.body.payload.person.is_volunteer) {
-      setTimeout(async () => {
+      console.log('Validated request, now setting timeout to wait for refreshed volunteer information...');
+      return setTimeout(async () => {
+        console.log('Timeout fulfilled, sending email to volunteer 📬');
         try {
           const personId = req.body.payload.person.id;
           const { email, first_name: firstName, tags } = await getPerson(personId);
@@ -61,19 +64,22 @@ router.post('/nationbuilder/personCreated', async function(req, res) {
               phoneNumber: org.phoneNumber,
             })),
           };
-          await sendgridApiClient.sendEmail(
+          const sgRes = await sendgridApiClient.sendEmail(
             senderEmailAddress,
             recipientEmailAddress,
             emailSubject,
             env.riverLATemplateID,
             dynamicTemplateData,
           );
+          return res.send(sgRes);
         } catch (error) {
           console.log(error);
+          res.status(400);
+          return res.send({
+            error: 'Error found in sending email within timeout',
+          });
         }
       }, 60000);
-      res.status(200);
-      return res.send('Success');
     } else {
       res.status(400);
       return res.send({

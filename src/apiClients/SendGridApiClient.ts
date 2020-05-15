@@ -70,11 +70,11 @@ class SendGridApiClient {
       from: senderEmailAddress,
       to: recipientEmailAddress,
       subject: emailSubject,
-      mailSettings: {
-        sandboxMode: {
-          enable: env.nodeEnv === 'development',
-        },
-      },
+      // mailSettings: {
+      //   sandboxMode: {
+      //     enable: env.nodeEnv === 'development',
+      //   },
+      // },
       templateId: templateId,
       dynamicTemplateData: dynamicTemplateData,
     };
