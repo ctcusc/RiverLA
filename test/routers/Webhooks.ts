@@ -16,7 +16,7 @@ app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 
 /* eslint-disable @typescript-eslint/camelcase */
-let person = {
+const nationbuilderPerson = {
   email: 'person1@gmail.com',
   first_name: 'person1',
   is_volunteer: true,
@@ -26,6 +26,9 @@ let person = {
     'Action: Volunteer Yes: People Organizations',
   ],
 };
+
+// create a version of nationbuilder person that can change
+let person = nationbuilderPerson;
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const user1: any = {
@@ -39,7 +42,11 @@ person = {
   email: 'person2@gmail.com',
   first_name: 'person2',
   is_volunteer: false,
-  tags: ['Action: Volunteer Yes: Water Organizations'],
+  tags: [
+    'Action: Volunteer Yes: Water Organizations',
+    'Action: Volunteer Yes: Environmental',
+    'Action: Volunteer Yes: People Organizations',
+  ],
 };
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -67,7 +74,7 @@ const user3: any = {
 
 const result1: DynamicTemplateData = {
   name: 'person1',
-  interests: [],
+  interests: ['Water Organizations', 'Environmental Causes', 'Social Justice and Recreation'],
   organizations: [
     {
       name: 'org1',
@@ -104,13 +111,25 @@ test.serial('testing is_volunteer true', async t => {
   t.log(process.env.NATIONBUILDER_WEBHOOK_TOKEN);
   sendgridApiClient.sendEmail = sinon.stub().returns(result1);
   airtableApiClient.getOrganizations = sinon.stub().returns(result1.organizations);
-  nationBuilderApiClient.getPerson = sinon.stub().returns(person);
+  nationBuilderApiClient.getPerson = sinon.stub().returns(nationbuilderPerson);
 
   const res = await request(app)
     .post('/webhooks/nationbuilder/personCreated')
     .send(user1);
   t.is(res.status, 200);
   t.deepEqual(res.body, result1);
+});
+
+test.serial('testing nationbuilder getPerson fails', async t => {
+  sinon.stub(env, 'nationbuilderWebhookToken').value(webtoken1);
+  t.log(process.env.NATIONBUILDER_WEBHOOK_TOKEN);
+  sendgridApiClient.sendEmail = sinon.stub().returns(result1);
+  airtableApiClient.getOrganizations = sinon.stub().returns(result1.organizations);
+  nationBuilderApiClient.getPerson = sinon.stub().throws(new Error('nationbuilder person cannot be found'));
+  const res = await request(app)
+    .post('/webhooks/nationbuilder/personCreated')
+    .send(user1);
+  t.is(res.status, 400);
 });
 
 test.serial('testing empty tags', async t => {
