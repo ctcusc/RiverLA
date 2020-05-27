@@ -6,8 +6,7 @@ import { DynamicTemplateData } from '../apiClients/SendGridApiClient';
 import apiClients from '../apiClients';
 import env from '../env';
 import express from 'express';
-import getPerson from '../apiClients/NationBuilderApiClient';
-const { airtableApiClient, sendgridApiClient } = apiClients;
+const { airtableApiClient, sendgridApiClient, nationBuilderApiClient } = apiClients;
 
 const router = express.Router();
 
@@ -24,6 +23,7 @@ const router = express.Router();
 
 router.post('/nationbuilder/personCreated', async function(req, res) {
   console.log('Recieved event in person created webhook, validating request...');
+  console.log(req.body.payload);
   if (env.nationbuilderWebhookToken === req.body.token) {
     if (req.body.payload.person.is_volunteer) {
       console.log('Validated request, now setting timeout to wait for refreshed volunteer information...');
@@ -31,7 +31,8 @@ router.post('/nationbuilder/personCreated', async function(req, res) {
         console.log('Timeout fulfilled, sending email to volunteer 📬');
         try {
           const personId = req.body.payload.person.id;
-          const { email, first_name: firstName, tags } = await getPerson(personId);
+
+          const { email, first_name: firstName, tags } = await nationBuilderApiClient.getPerson(personId);
           const allActivities = tags.includes('Action: Volunteer Yes: All activities');
 
           // Find the mapping for these at: https://airtable.com/tblRHydYMl58f1rO8/viwTkGdSzyYX1i7Bn?blocks=hide
@@ -79,7 +80,7 @@ router.post('/nationbuilder/personCreated', async function(req, res) {
             error: 'Error found in sending email within timeout',
           });
         }
-      }, 60000);
+      }, 10000);
     } else {
       res.status(400);
       return res.send({

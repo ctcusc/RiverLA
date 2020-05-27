@@ -1,6 +1,5 @@
+import NationBuilderApiClient from '../../src/apiClients/NationBuilderApiClient';
 import env from '../../src/env';
-import getPerson from '../../src/apiClients/NationBuilderApiClient';
-import proxyquire from 'proxyquire';
 import sinon from 'sinon';
 import test from 'ava';
 
@@ -23,10 +22,11 @@ const person1 = {
 test.serial('Checks person object is returned', async t => {
   sinon.stub(env, 'nodeEnv').value('development');
   sinon.stub(env.apiKeys, 'nationbuilder').value('access_token');
-  const getPersonStub = sinon.stub();
-  const getPersonModule = proxyquire(getPerson, {
-    './getPerson': getPersonStub,
-  });
-  const personReturned = getPersonModule(personId);
+
+  const nationBuilderApiClient = new NationBuilderApiClient('non-empty-key');
+
+  sinon.stub(nationBuilderApiClient, 'getPerson').resolves(person1);
+
+  const personReturned = await nationBuilderApiClient.getPerson(personId);
   t.deepEqual(personReturned, person1);
 });

@@ -42,7 +42,7 @@ class SendGridApiClient {
    */
   constructor(apiKey: string) {
     if (apiKey === '') {
-      throw new InvalidParametersError('API Key is empty.');
+      throw new InvalidParametersError('SendGrid API Key is empty.');
     }
     this.apiKey = apiKey;
   }
@@ -70,11 +70,11 @@ class SendGridApiClient {
       from: senderEmailAddress,
       to: recipientEmailAddress,
       subject: emailSubject,
-      // mailSettings: {
-      //   sandboxMode: {
-      //     enable: env.nodeEnv === 'development',
-      //   },
-      // },
+      mailSettings: {
+        sandboxMode: {
+          enable: env.nodeEnv === 'development',
+        },
+      },
       templateId: templateId,
       dynamicTemplateData: dynamicTemplateData,
     };
