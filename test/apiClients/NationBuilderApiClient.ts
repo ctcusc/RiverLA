@@ -17,7 +17,12 @@ const person1 = {
     'Action: Volunteer Yes: People Organizations',
   ],
 };
-/* eslint-enable @typescript-eslint/camelcase */
+
+test.serial('throws an exception when an empty api key is passed into its constructor', t => {
+  t.throws(() => {
+    new NationBuilderApiClient('');
+  });
+});
 
 test.serial('Checks person object is returned', async t => {
   sinon.stub(env, 'nodeEnv').value('development');
