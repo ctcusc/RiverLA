@@ -23,64 +23,52 @@ const router = express.Router();
 
 router.post('/nationbuilder/personCreated', async function(req, res) {
   console.log('Recieved event in person created webhook, validating request...');
-  console.log(req.body.payload);
   if (env.nationbuilderWebhookToken === req.body.token) {
     if (req.body.payload.person.is_volunteer) {
-      console.log('Validated request, now setting timeout to wait for refreshed volunteer information...');
-      return setTimeout(async () => {
-        console.log('Timeout fulfilled, sending email to volunteer 📬');
-        try {
-          const personId = req.body.payload.person.id;
+      console.log(req.body.payload.person);
 
-          const { email, first_name: firstName, tags } = await nationBuilderApiClient.getPerson(personId);
-          const allActivities = tags.includes('Action: Volunteer Yes: All activities');
+      const personId = req.body.payload.person.id;
+      const { email, first_name: firstName, tags } = await nationBuilderApiClient.getPerson(personId);
+      const allActivities = tags.includes('Action: Volunteer Yes: All activities');
 
-          // Find the mapping for these at: https://airtable.com/tblRHydYMl58f1rO8/viwTkGdSzyYX1i7Bn?blocks=hide
-          const interestCategories: string[] = [];
-          if (tags.includes('Action: Volunteer Yes: Water Organizations') || allActivities) {
-            interestCategories.push('Water Organizations');
-          }
-          if (tags.includes('Action: Volunteer Yes: Environmental') || allActivities) {
-            interestCategories.push('Environmental Causes');
-          }
-          if (tags.includes('Action: Volunteer Yes: People Organizations') || allActivities) {
-            interestCategories.push('Social Justice and Recreation');
-          }
+      // Find the mapping for these at: https://airtable.com/tblRHydYMl58f1rO8/viwTkGdSzyYX1i7Bn?blocks=hide
+      const interestCategories: string[] = [];
+      if (tags.includes('Action: Volunteer Yes: Water Organizations') || allActivities) {
+        interestCategories.push('Water Organizations');
+      }
+      if (tags.includes('Action: Volunteer Yes: Environmental') || allActivities) {
+        interestCategories.push('Environmental Causes');
+      }
+      if (tags.includes('Action: Volunteer Yes: People Organizations') || allActivities) {
+        interestCategories.push('Social Justice and Recreation');
+      }
 
-          const filters: AirTableFilters = {
-            interestCategories,
-          };
-          const listOfOrganizations = await airtableApiClient.getOrganizations(filters);
-          const senderEmailAddress = 'info@riverla.org';
-          const recipientEmailAddress = email;
-          const emailSubject = 'RiverLA has found you a volunteering match!';
+      const filters: AirTableFilters = {
+        interestCategories,
+      };
+      const listOfOrganizations = await airtableApiClient.getOrganizations(filters);
+      const senderEmailAddress = 'info@riverla.org';
+      const recipientEmailAddress = email;
+      const emailSubject = 'RiverLA has found you a volunteering match!';
 
-          const dynamicTemplateData: DynamicTemplateData = {
-            name: firstName,
-            interests: interestCategories.map(category => category.toLowerCase()),
-            organizations: listOfOrganizations.map(org => ({
-              name: org.name,
-              website: org.url,
-              email: org.email,
-              phoneNumber: org.phoneNumber,
-            })),
-          };
-          const sgRes = await sendgridApiClient.sendEmail(
-            senderEmailAddress,
-            recipientEmailAddress,
-            emailSubject,
-            env.riverLATemplateID,
-            dynamicTemplateData,
-          );
-          return res.send(sgRes);
-        } catch (error) {
-          console.log(error);
-          res.status(400);
-          return res.send({
-            error: 'Error found in sending email within timeout',
-          });
-        }
-      }, 10000);
+      const dynamicTemplateData: DynamicTemplateData = {
+        name: firstName,
+        interests: interestCategories.map(category => category.toLowerCase()),
+        organizations: listOfOrganizations.map(org => ({
+          name: org.name,
+          website: org.url,
+          email: org.email,
+          phoneNumber: org.phoneNumber,
+        })),
+      };
+      const sgRes = await sendgridApiClient.sendEmail(
+        senderEmailAddress,
+        recipientEmailAddress,
+        emailSubject,
+        env.riverLATemplateID,
+        dynamicTemplateData,
+      );
+      return res.send(sgRes);
     } else {
       res.status(400);
       return res.send({
