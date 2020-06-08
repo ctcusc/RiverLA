@@ -42,7 +42,7 @@ class SendGridApiClient {
    */
   constructor(apiKey: string) {
     if (apiKey === '') {
-      throw new InvalidParametersError('API Key is empty.');
+      throw new InvalidParametersError('SendGrid API Key is empty.');
     }
     this.apiKey = apiKey;
   }
